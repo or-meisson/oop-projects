@@ -1,12 +1,12 @@
 public class Game {
 	//todo constant of 2
 	//todo change imlementaion of checkRightMark etc so it will take row, col and not coordinate
-	Board board;
-	int size;
-	int winStreak;
-	Player playerX;
-	Player playerO;
-	Renderer renderer;
+	private Board board;
+	private int size;
+	private int winStreak;
+	private Player playerX;
+	private Player playerO;
+	private Renderer renderer;
 
 	public Game(Player playerX, Player playerO, Renderer renderer) {
 		this.renderer = renderer;
@@ -44,40 +44,40 @@ public class Game {
 	}
 	private boolean checkRightMark(int[] coordinate, Board board, Mark mark){
 		int row = coordinate[0];
-		int new_col = coordinate[1] + 1;
-		if(board.getMark(row, new_col).equals(mark)){
+		int newCol = coordinate[1] + 1;
+		if(board.getMark(row, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
+		int newRow = coordinate[0] - 1;
 		int col = coordinate[1];
-		if(board.getMark(new_row, col).equals(mark)){
+		if(board.getMark(newRow, col).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkDownMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] + 1;
+		int newRow = coordinate[0] + 1;
 		int col = coordinate[1];
-		if(board.getMark(new_row, col).equals(mark)){
+		if(board.getMark(newRow, col).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpLeftMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
-		int new_col = coordinate[1] - 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+		int newRow = coordinate[0] - 1;
+		int newCol = coordinate[1] - 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpRightMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
-		int new_col = coordinate[1] + 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+		int newRow = coordinate[0] - 1;
+		int newCol = coordinate[1] + 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
@@ -151,7 +151,7 @@ public class Game {
 	private boolean isWin(Mark mark) {
 		boolean isWinStreakInRows = false;
 		boolean isWinStreakInCols = false;
-		boolean isWinStreakInDiagL2R = false;
+		boolean isWinStreakInDiagL2R = false; //todo shahar said to change
 		boolean isWinStreakInDiagR2L = false;
 		for (int row = 0; row < size; row++) {
 			for (int col = 0; col < size; col++) {
@@ -172,11 +172,16 @@ public class Game {
 			playerX.playTurn(board, Mark.X);
 			renderer.renderBoard(board);
 			if(isWin(Mark.X)){
+				System.out.println(33);
 				return Mark.X;
 			}
+			renderer.renderBoard(board);
+
 			if(isBoardFull()){
 				return Mark.BLANK;
 			}
+			renderer.renderBoard(board);
+
 			playerO.playTurn(board, Mark.O);
 			renderer.renderBoard(board);
 			if(isWin(Mark.O)){

@@ -1,32 +1,33 @@
 public class Board {
-	int DEFAULT_BOARD_SIZE = 4;
-	public static final int FIRST_INDEX_OF_BOARD = 0;
+	private static int DEFAULT_BOARD_SIZE = 4;
+//	public static final int FIRST_INDEX_OF_BOARD = 0;
 
-	public int getFirstIndex() {
-		return FIRST_INDEX_OF_BOARD;
-	}
+//	public int getFirstIndex() {
+//		return FIRST_INDEX_OF_BOARD;
+//	}
 
 	private int size;
 	private Mark[][] myBoard;
 
 	public Board() {
-		this.myBoard = new Mark[DEFAULT_BOARD_SIZE][DEFAULT_BOARD_SIZE];
-		this.size = DEFAULT_BOARD_SIZE;
+	this(DEFAULT_BOARD_SIZE);
+	}
+
+	public Board(int size) {
+		this.myBoard = new Mark[size][size];
+		this.size = size;
 		for(int i=0; i< size; i++){
 			for(int j=0; j<size;j++){
 				myBoard[i][j] = Mark.BLANK;
 			}
 		}
-	}
 
-	public Board(int size) {
-		this.size = size;
 	}
 
 	public int getSize() {
 		return size;
 	}
-	public boolean putMark(Mark mark, int row, int col){
+	public boolean putMark(Mark mark, int row, int col){ //todo check validity??
 		if (myBoard[row][col].equals(Mark.BLANK)){
 			myBoard[row][col] = mark;
 			return true;

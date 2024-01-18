@@ -20,64 +20,64 @@ public class CleverPlayer implements Player{
 	}
 	private boolean checkLeftMark(int[] coordinate, Board board, Mark mark){
 		int row = coordinate[0];
-		int new_col = coordinate[1] - 1;
-		if(board.getMark(row, new_col).equals(mark)){
+		int newCol = coordinate[1] - 1;
+		if(board.getMark(row, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkRightMark(int[] coordinate, Board board, Mark mark){
 		int row = coordinate[0];
-		int new_col = coordinate[1] + 1;
-		if(board.getMark(row, new_col).equals(mark)){
+		int newCol = coordinate[1] + 1;
+		if(board.getMark(row, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
+		int newRow = coordinate[0] - 1;
 		int col = coordinate[1];
-		if(board.getMark(new_row, col).equals(mark)){
+		if(board.getMark(newRow, col).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkDownMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] + 1;
+		int newRow = coordinate[0] + 1;
 		int col = coordinate[1];
-		if(board.getMark(new_row, col).equals(mark)){
+		if(board.getMark(newRow, col).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpLeftMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
-		int new_col = coordinate[1] - 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+		int newRow = coordinate[0] - 1;
+		int newCol = coordinate[1] - 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkUpRightMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] - 1;
-		int new_col = coordinate[1] + 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+		int newRow = coordinate[0] - 1;
+		int newCol = coordinate[1] + 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
-	private boolean checkDownRightMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] + 1;
-		int new_col = coordinate[1] + 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+	private boolean checkDownRightMark(int[] coordinate, Board board, Mark mark){ //TODO MAYBE SIMPLIFY
+		int newRow = coordinate[0] + 1;
+		int newCol = coordinate[1] + 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
 	}
 	private boolean checkDownLeftMark(int[] coordinate, Board board, Mark mark){
-		int new_row = coordinate[0] + 1;
-		int new_col = coordinate[1] - 1;
-		if(board.getMark(new_row, new_col).equals(mark)){
+		int newRow = coordinate[0] + 1;
+		int newCol = coordinate[1] - 1;
+		if(board.getMark(newRow, newCol).equals(mark)){
 			return true;
 		}
 		return false;
@@ -98,7 +98,7 @@ public class CleverPlayer implements Player{
 	private int[][] checkPossiblePlacesWith2Marks(int[][] PossiblePlacesToPutMark,
 												  Board board, Mark mark){
 		int arraySize = PossiblePlacesToPutMark.length * 8;
-		int[][] PossiblePlacesWith2Marks = new int[arraySize][2];
+		int[][] possiblePlacesWith2Marks = new int[arraySize][2];
 		int count = 0;
 		for(int[] coordinate : PossiblePlacesToPutMark){
 			boolean isLeftCoorWithMark = checkLeftMark(coordinate, board, mark);
@@ -111,40 +111,40 @@ public class CleverPlayer implements Player{
 			boolean isDownLeftCoorWithMark = checkDownLeftMark(coordinate, board, mark);
 
 			if(isLeftCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isRightCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isUpCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isDownCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isUpRightCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isUpLeftCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isDownRightCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 			if(isDownLeftCoorWithMark){
-				PossiblePlacesWith2Marks[count] = coordinate;
+				possiblePlacesWith2Marks[count] = coordinate;
 				count++;
 			}
 
 		}
-		return PossiblePlacesWith2Marks;
+		return possiblePlacesWith2Marks;
 	}
 
 	private int[][] checkPossiblePlacesToPutMark(Board board){

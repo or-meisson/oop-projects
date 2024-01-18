@@ -6,6 +6,9 @@ public class PlayerFactory {
 	public Player buildPlayer(String type){
 		Player player;
 		switch (type) {
+			case "whatever":
+				player = new WhateverPlayer();
+				break;
 			case "human":
 				player = new HumanPlayer();
 				break;
@@ -17,9 +20,7 @@ public class PlayerFactory {
 				break;
 			default:
 				player = null;
-
 		}
 		return player;
 	}
-
 }
