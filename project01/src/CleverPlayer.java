@@ -1,9 +1,11 @@
 import java.util.Random;
 
-public class CleverPlayer {
+public class CleverPlayer implements Player{
 	public CleverPlayer() {
 	}
 	//todo: constant of 2(coordinate), constant of 8
+	//todo change imlementaion of checkRightMark etc so it will take row, col and not coordinate
+
 	public void playTurn(Board board, Mark mark){
 		int[][] PossiblePlacesToPutMark = checkPossiblePlacesToPutMark(board);
 		int[][] possiblePlacesWith2Marks = checkPossiblePlacesWith2Marks(PossiblePlacesToPutMark, board, mark);

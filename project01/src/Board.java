@@ -6,8 +6,8 @@ public class Board {
 		return FIRST_INDEX_OF_BOARD;
 	}
 
-	int size;
-	Mark[][] myBoard;
+	private int size;
+	private Mark[][] myBoard;
 
 	public Board() {
 		this.myBoard = new Mark[DEFAULT_BOARD_SIZE][DEFAULT_BOARD_SIZE];

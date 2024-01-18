@@ -1,7 +1,10 @@
 import java.util.Random;
 
-public class GeniusPlayer {
+public class GeniusPlayer implements Player{
 	//todo: constant of 2(coordinate), constant of 8
+	//todo create a new class - figure out what to do with the duplicated implementation - forumהוספת מחלקה
+	//todo change imlementaion of checkRightMark etc so it will take row, col and not coordinate
+
 
 	public GeniusPlayer() {
 	}
