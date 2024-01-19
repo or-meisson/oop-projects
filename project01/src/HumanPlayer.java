@@ -1,28 +1,26 @@
-public class HumanPlayer implements Player{
-	private String X_PLAYER_TYPE_COOR_MESSAGE = "Player X, type coordinates: "; //todo check constants
-	private String O_PLAYER_TYPE_COOR_MESSAGE = "Player O, type coordinates: ";
-	private String INVALID_COOR_MESSAGE = "Invalid mark position, please choose a different" +
-			"position.\n Invalid coordinate, type again: ";
-	private String OCCUPIED_SPOT_ERROR_MESSAGE = "Mark position is already occupied.\n" +
-			" Invalid coordinate, type again: ";
+public class HumanPlayer implements Player {
+	//todo why when i enter coordinates that are taken it doesnt print msg?
 
 	public HumanPlayer() {
 	}
+
 	@Override
-	public void playTurn(Board board, Mark mark){
-		switch (mark.toString()){
-			case "O":
-				System.out.println(O_PLAYER_TYPE_COOR_MESSAGE);
-				break;
-			case "X":
-				System.out.println(X_PLAYER_TYPE_COOR_MESSAGE);
-				break;
-		}
+	public void playTurn(Board board, Mark mark) {
+		String markInString = mark.toString();
+		System.out.println(Constants.playerRequestInputString(markInString));
+//		switch (markInString){
+//			case "O":
+//				System.out.println(Constants.playerRequestInputString(markInString));
+//				break;
+//			case "X":
+//				System.out.println(X_PLAYER_TYPE_COOR_MESSAGE);
+//				break;
+//		}
 
 		int coorInput = KeyboardInput.readInt();
 		int[] boardCoordinates = getCoorNum(coorInput);
 		boolean isValidCoor = checkCoorValidity(boardCoordinates, board, mark);
-		while (!isValidCoor){
+		while (!isValidCoor) {
 
 			coorInput = KeyboardInput.readInt();
 			boardCoordinates = getCoorNum(coorInput);
@@ -31,7 +29,8 @@ public class HumanPlayer implements Player{
 
 
 	}
-	private int[] getCoorNum(int coor){
+
+	private int[] getCoorNum(int coor) {
 		int[] boardCoordinates = new int[2];
 		int firstDigit = coor / 10;
 		int secondDigit = coor % 10;
@@ -39,16 +38,16 @@ public class HumanPlayer implements Player{
 		boardCoordinates[1] = secondDigit;
 		return boardCoordinates;
 	}
+
 	private boolean checkCoorValidity(int[] boardCoordinates, Board board, Mark mark) {
 		int boardSize = board.getSize();
 		int firstCoor = boardCoordinates[0];
 		int secondCoor = boardCoordinates[1];
 		if (firstCoor < 0 || firstCoor >= boardSize || secondCoor < 0 || secondCoor >= boardSize) {
-			System.out.println(INVALID_COOR_MESSAGE);
+			System.out.println(Constants.INVALID_COORDINATE);
 			return false;
-		}
-		else if (!board.putMark(mark, firstCoor, secondCoor)) {
-			System.out.println(OCCUPIED_SPOT_ERROR_MESSAGE);
+		} else if (!board.putMark(mark, firstCoor, secondCoor)) {
+			System.out.println(Constants.OCCUPIED_COORDINATE);
 			return false;
 		}
 		return true;

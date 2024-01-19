@@ -3,10 +3,6 @@ public class Tournament {
 	private Renderer renderer;
 	private Player player1;
 	private Player player2;
-	private static String WRONG_RENDERER_INPUT_MESSAGE = "Choose a renderer, and start again.\n" +
-			"Please choose one of the following [console, none]";
-	private static String WRONG_PLAYER_INPUT_MESSAGE = "Choose a player, and start again.\n" +
-			"The players: [human, clever, whatever, genius]";
 	private String RESULTS_MESSAGE = "######### Results #########";
 
 	public Tournament(int rounds, Renderer renderer, Player player1, Player player2) {
@@ -51,14 +47,14 @@ public class Tournament {
 		RendererFactory rendererFactory = new RendererFactory();
 		Renderer renderer1 = rendererFactory.buildRenderer(args[3], size);
 		if (renderer1 == null) {
-			System.out.println(WRONG_RENDERER_INPUT_MESSAGE);
+			System.out.println(Constants.UNKNOWN_RENDERER_NAME);
 			return;
 		}
 		PlayerFactory playerFactory = new PlayerFactory();
 		Player player1 = playerFactory.buildPlayer(args[4].toLowerCase());
 		Player player2 = playerFactory.buildPlayer(args[5].toLowerCase());
 		if (player1 == null || player2 == null) {
-			System.out.println(WRONG_PLAYER_INPUT_MESSAGE);
+			System.out.println(Constants.UNKNOWN_PLAYER_NAME);
 			return;
 		}
 		Tournament tournament = new Tournament(roundsNum, renderer1, player1, player2);
