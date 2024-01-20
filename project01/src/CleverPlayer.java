@@ -1,57 +1,55 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * The {@code CleverPlayer} class represents a player with a strategy to make
+ * clever moves on the game board.It utilizes a {@code MarksChecker} to evaluate possible
+ * moves and makes decisions based on certain criteria.
+ *
+ * @author Or Meissonnier
+ */
 public class CleverPlayer implements Player {
-	private MarksChecker marksChecker = new MarksChecker();
+	/**
+	 * The instance of MarksChecker used to evaluate possible moves on the game board.
+	 */
+	private final MarksChecker marksChecker = new MarksChecker();
+	/**
+	 * A multiplier for evaluating the importance of two marks in a row vertically.
+	 */
+	private static final int VERTICAL_MULTIPLAYER = 1;
+	/**
+	 * A multiplier for evaluating the importance of two marks in a row horizontally.
+	 */
+	private static final int HORIZONTAL_MULTIPLAYER = 100;
+	/**
+	 * Creates an instance of the {@code WhateverPlayer} class to be used for making random moves.
+	 */
+	private final WhateverPlayer randomPlayer = new WhateverPlayer();
 
+	/**
+	 * Constructs a new CleverPlayer instance.
+	 */
 	public CleverPlayer() {
 	}
 
-	//todo change imlementaion of checkRightMark etc so it will take row, col and not coordinate
-
+	/**
+	 * Makes a strategic move on the provided game board by evaluating possible positions.
+	 * If there are no positions with two marks in a row, it resorts to a random move.
+	 *
+	 * @param board The game board.
+	 * @param mark  The mark to be placed on the board.
+	 */
 	public void playTurn(Board board, Mark mark) {
 		ArrayList<int[]> possiblePlacesToPutMark = marksChecker.checkPossiblePlacesToPutMark(board);
-		ArrayList<int[]> possiblePlacesWith2Marks = checkPossiblePlacesWith2Marks(possiblePlacesToPutMark, board, mark);
+		ArrayList<int[]> possiblePlacesWith2Marks =
+				marksChecker.checkPossiblePlacesWith2Marks(possiblePlacesToPutMark, board, mark
+						, HORIZONTAL_MULTIPLAYER, VERTICAL_MULTIPLAYER);
 		if (possiblePlacesWith2Marks.isEmpty()) {
-			WhateverPlayer randomPlayer = new WhateverPlayer();
 			randomPlayer.playTurn(board, mark);
 		} else {
-			randomizeCoorAndPutMark(possiblePlacesWith2Marks, board, mark);
+			int[] randomCoor = possiblePlacesWith2Marks.
+					get(new Random().nextInt(possiblePlacesWith2Marks.size()));
+			board.putMark(mark, randomCoor[0], randomCoor[1]);
 		}
 	}
-
-
-	private void randomizeCoorAndPutMark(ArrayList<int[]> CoorArray, Board board, Mark mark) {
-		Random random = new Random();
-		int randomIdx = random.nextInt(CoorArray.size());
-		int[] randomCoor = CoorArray.get(randomIdx);
-		int coorRow = randomCoor[0];
-		int coorCol = randomCoor[1];
-		board.putMark(mark, coorRow, coorCol);
-	}
-
-
-	private ArrayList<int[]> checkPossiblePlacesWith2Marks(ArrayList<int[]> PossiblePlacesToPutMark,
-														   Board board, Mark mark) {
-//		MarksChecker marksChecker = new MarksChecker();
-		ArrayList<int[]> possiblePlacesWith2Marks = new ArrayList<>();
-		for (int[] coordinate : PossiblePlacesToPutMark) {
-			boolean isLeftCoorWithMark = marksChecker.checkLeftMark(coordinate, board, mark);
-			boolean isRightCoorWithMark = marksChecker.checkRightMark(coordinate, board, mark);
-			boolean isUpCoorWithMark = marksChecker.checkUpMark(coordinate, board, mark);
-			boolean isDownCoorWithMark = marksChecker.checkDownMark(coordinate, board, mark);
-			boolean isUpRightCoorWithMark = marksChecker.checkUpRightMark(coordinate, board, mark);
-			boolean isUpLeftCoorWithMark = marksChecker.checkUpLeftMark(coordinate, board, mark);
-			boolean isDownRightCoorWithMark = marksChecker.checkDownRightMark(coordinate, board, mark);
-			boolean isDownLeftCoorWithMark = marksChecker.checkDownLeftMark(coordinate, board, mark);
-
-			if (isLeftCoorWithMark || isRightCoorWithMark || isUpCoorWithMark || isDownCoorWithMark ||
-					isUpRightCoorWithMark || isUpLeftCoorWithMark || isDownRightCoorWithMark || isDownLeftCoorWithMark) {
-				// Add the coordinate to the ArrayList
-				possiblePlacesWith2Marks.add(coordinate);
-			}
-		}
-		return possiblePlacesWith2Marks;
-	}
-
 }

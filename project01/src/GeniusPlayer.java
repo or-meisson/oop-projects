@@ -1,144 +1,99 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * The {@code GeniusPlayer} class represents an advanced player with a strategic
+ * approach to the tic-tac-toe game.
+ * It evaluates possible moves and makes decisions based on creating opportunities
+ * to win or block the opponent.
+ */
 public class GeniusPlayer implements Player {
-	//todo: constant of 2(coordinate), constant of 8
-	//todo create a new class - figure out what to do with the duplicated implementation - forumהוספת מחלקה
-	//todo change imlementaion of checkRightMark etc so it will take row, col and not coordinate
-	private MarksChecker marksChecker = new MarksChecker();
+	//todo readme
 
 
+	/**
+	 * The instance of MarksChecker used to evaluate possible moves on the game board.
+	 */
+	private final MarksChecker marksChecker = new MarksChecker();
+
+	/**
+	 * A multiplier for evaluating the importance of three marks in a row vertically.
+	 */
+	private static final int VERTICAL_MULTIPLIER = 100;
+
+	/**
+	 * A multiplier for evaluating the importance of three marks in a row horizontally.
+	 */
+	private static final int HORIZONTAL_MULTIPLIER = 1;
+	/**
+	 * Creates an instance of the {@code WhateverPlayer} class to be used for making random moves.
+	 */
+	private final WhateverPlayer randomPlayer = new WhateverPlayer();
+
+	/**
+	 * Constructs a new GeniusPlayer instance.
+	 */
 	public GeniusPlayer() {
 	}
 
+	/**
+	 * Makes a strategic move on the provided game board by evaluating possible positions.
+	 * Prioritizes creating opportunities for three marks in a row, blocking the opponent,
+	 * and acting like a clever player if no other option.
+	 *
+	 * @param board The game board.
+	 * @param mark  The mark to be placed on the board.
+	 */
 	public void playTurn(Board board, Mark mark) {
-		ArrayList<int[]> PossiblePlacesToPutMark = marksChecker.checkPossiblePlacesToPutMark(board);
-		ArrayList<int[]> possiblePlacesWith3Marks = checkPossiblePlacesWith3Marks(PossiblePlacesToPutMark, board, mark);
-//		for (int[] coordinate : PossiblePlacesToPutMark) {
-//			System.out.println(Arrays.toString(coordinate));
-//		}
-//		for (int[] coordinate : possiblePlacesWith3Marks) {
-//			System.out.println(Arrays.toString(coordinate));
-//		}
-		if (possiblePlacesWith3Marks.isEmpty()) {
-			//randomize an empty cell from PossiblePlacesToPutMark
-//			randomizeCoorAndPutMark(PossiblePlacesToPutMark, board, mark);
-			CleverPlayer cleverPlayer = new CleverPlayer();
-			cleverPlayer.playTurn(board, mark);
-		} else {
-			// //randomize an empty cell from possiblePlacesWith2Marks
-			randomizeCoorAndPutMark(possiblePlacesWith3Marks, board, mark);
+		ArrayList<int[]> possiblePlacesToPutMark = marksChecker.checkPossiblePlacesToPutMark(board);
+		ArrayList<int[]> possiblePlacesWith3Marks = marksChecker.checkPossiblePlacesWith3Marks
+				(possiblePlacesToPutMark, board, mark,
+						HORIZONTAL_MULTIPLIER, VERTICAL_MULTIPLIER);
+		if (!possiblePlacesWith3Marks.isEmpty()) {
+			int[] randomCoor = possiblePlacesWith3Marks.get
+					(new Random().nextInt(possiblePlacesWith3Marks.size()));
+			board.putMark(mark, randomCoor[0], randomCoor[1]);
+			return;
 		}
-	}
-
-
-	private void randomizeCoorAndPutMark(ArrayList<int[]> CoorArray, Board board, Mark mark) {
-		Random random = new Random();
-		int randomIdx = random.nextInt(CoorArray.size());
-		int[] randomCoor = CoorArray.get(randomIdx);
-		int coorRow = randomCoor[0];
-		int coorCol = randomCoor[1];
-		board.putMark(mark, coorRow, coorCol);
-	}
-//
-//	private ArrayList<int[]> checkPossiblePlacesToPutMark(Board board) { //todo this is duplicate with clever
-//		int boardSize = board.getSize();
-//		int maxSize = boardSize * boardSize;
-//		ArrayList<int[]> possiblePlacesToPutMark = new ArrayList<int[]>();
-////		int count = 0;
-//		for (int row = 0; row < boardSize; row++) {
-//			for (int col = 0; col < boardSize; col++) {
-//				Mark curr_mark = board.getMark(row, col);
-//				if (curr_mark.equals(Mark.BLANK)) {
-//					int[] coordinate = {row, col};
-//					possiblePlacesToPutMark.add(coordinate);
-////					possiblePlacesToPutMark[count][0] = row;
-////					possiblePlacesToPutMark[count][1] = col;
-////					count++;
-//
-//				}
-//			}
-//		}
-//		return possiblePlacesToPutMark;
-//	}
-
-	private ArrayList<int[]> checkPossiblePlacesWith3Marks(ArrayList<int[]> PossiblePlacesToPutMark,
-														   Board board, Mark mark) {
-//		int arraySize = PossiblePlacesToPutMark.length * 8;
-		ArrayList<int[]> PossiblePlacesWith3Marks = new ArrayList<>();
-
-//		int count = 0;
-		for (int[] coordinate : PossiblePlacesToPutMark) {
-			boolean isLeftCoorWithMark = marksChecker.checkLeftMark(coordinate, board, mark);
-			boolean isRightCoorWithMark = marksChecker.checkRightMark(coordinate, board, mark);
-			boolean isUpCoorWithMark = marksChecker.checkUpMark(coordinate, board, mark);
-			boolean isDownCoorWithMark = marksChecker.checkDownMark(coordinate, board, mark);
-			boolean isUpRightCoorWithMark = marksChecker.checkUpRightMark(coordinate, board, mark);
-			boolean isUpLeftCoorWithMark = marksChecker.checkUpLeftMark(coordinate, board, mark);
-			boolean isDownRightCoorWithMark = marksChecker.checkDownRightMark(coordinate, board, mark);
-			boolean isDownLeftCoorWithMark = marksChecker.checkDownLeftMark(coordinate, board, mark);
-
-
-			if (isLeftCoorWithMark) {
-				int[] leftCoor = {coordinate[0], coordinate[1] - 1};
-				boolean isLeftLeftCoorWithMark = marksChecker.checkLeftMark(leftCoor, board, mark);
-				if (isLeftLeftCoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isRightCoorWithMark) {
-				int[] rightCoor = {coordinate[0], coordinate[1] + 1};
-				boolean isRightRightCoorWithMark = marksChecker.checkRightMark(rightCoor, board, mark);
-				if (isRightRightCoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isUpCoorWithMark) {
-				int[] upCoor = {coordinate[0] - 1, coordinate[1]};
-				boolean isUpUpCoorWithMark = marksChecker.checkUpMark(upCoor, board, mark);
-				if (isUpUpCoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isDownCoorWithMark) {
-				int[] downCoor = {coordinate[0] + 1, coordinate[1]};
-				boolean isDownDownCoorWithMark = marksChecker.checkDownMark(downCoor, board, mark);
-				if (isDownDownCoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isUpRightCoorWithMark) {
-				int[] upRightCoor = {coordinate[0] - 1, coordinate[1] + 1};
-				boolean isUpRightX2CoorWithMark = marksChecker.checkUpRightMark(upRightCoor, board, mark);
-				if (isUpRightX2CoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isUpLeftCoorWithMark) {
-				int[] upLeftCoor = {coordinate[0] - 1, coordinate[1] - 1};
-				boolean isUpLeftX2CoorWithMark = marksChecker.checkUpLeftMark(upLeftCoor, board, mark);
-				if (isUpLeftX2CoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isDownRightCoorWithMark) {
-				int[] downRightCoor = {coordinate[0] + 1, coordinate[1] + 1};
-				boolean isDownRightX2CoorWithMark = marksChecker.checkDownRightMark(downRightCoor, board, mark);
-				if (isDownRightX2CoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-			if (isDownLeftCoorWithMark) {
-				int[] downLeftCoor = {coordinate[0] + 1, coordinate[1] - 1};
-				boolean isDownLeftX2CoorWithMark = marksChecker.checkDownLeftMark(downLeftCoor, board, mark);
-				if (isDownLeftX2CoorWithMark) {
-					PossiblePlacesWith3Marks.add(coordinate);
-				}
-			}
-
+		if (canDefeatOpponent(mark, board, possiblePlacesToPutMark)) {
+			return;
 		}
-		return PossiblePlacesWith3Marks;
-
+		//act like a clever player
+		ArrayList<int[]> possiblePlacesWith2Marks =
+				this.marksChecker.checkPossiblePlacesWith2Marks(possiblePlacesToPutMark, board, mark,
+						HORIZONTAL_MULTIPLIER, VERTICAL_MULTIPLIER);
+		if (!possiblePlacesWith2Marks.isEmpty()) {
+			int[] randomCoor = possiblePlacesWith2Marks.get
+					(new Random().nextInt(possiblePlacesWith2Marks.size()));
+			board.putMark(mark, randomCoor[0], randomCoor[1]);
+			return;
+		}
+		randomPlayer.playTurn(board, mark);
 	}
+
+	/**
+	 * Checks if the player can defeat the opponent by placing a mark strategically.
+	 *
+	 * @param mark                    The mark of the current player.
+	 * @param board                   The game board.
+	 * @param possiblePlacesToPutMark List of possible places to put the mark.
+	 * @return {@code true} if the opponent can be defeated, {@code false} otherwise.
+	 */
+	private boolean canDefeatOpponent(Mark mark, Board board, ArrayList<int[]> possiblePlacesToPutMark) {
+		Mark oppositeMark = mark == Mark.X ? Mark.O : Mark.X;
+		ArrayList<int[]> possiblePlacesWith3MarksForOpponent =
+				marksChecker.checkPossiblePlacesWith3Marks(possiblePlacesToPutMark,
+						board, oppositeMark,
+						VERTICAL_MULTIPLIER, HORIZONTAL_MULTIPLIER);
+		if (!possiblePlacesWith3MarksForOpponent.isEmpty()) {
+			int[] randomCoor = possiblePlacesWith3MarksForOpponent.get
+					(new Random().nextInt(possiblePlacesWith3MarksForOpponent.size()));
+			board.putMark(mark, randomCoor[0], randomCoor[1]);
+			return true; //enemy defeated
+		}
+		return false;
+	}
+
 }
+
+
