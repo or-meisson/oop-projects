@@ -56,13 +56,16 @@ public class Board {
 	 * {@code false} if the position is already occupied.
 	 */
 	public boolean putMark(Mark mark, int row, int col) {
+		if (isNotValid(row, col)) {
+			return false;
+		}
 		if (myBoard[row][col].equals(Mark.BLANK)) {
 			myBoard[row][col] = mark;
 			return true;
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets the mark at the specified position on the board.
 	 *
@@ -71,9 +74,21 @@ public class Board {
 	 * @return The mark at the specified position, or BLANK if the position is out of bounds.
 	 */
 	public Mark getMark(int row, int col) {
-		if (row < 0 || row > size || col < 0 || col > size) {
+		if (isNotValid(row, col)) {
 			return Mark.BLANK;
 		}
 		return myBoard[row][col];
+	}
+
+	/**
+	 * Checks if the specified row and column indices are valid positions on the game board.
+	 *
+	 * @param row The row index to be checked.
+	 * @param col The column index to be checked.
+	 * @return {@code true} if the position is not valid (out of bounds),
+	 * {@code false} if the position is valid.
+	 */
+	private boolean isNotValid(int row, int col) {
+		return row < 0 || row >= size || col < 0 || col >= size;
 	}
 }
