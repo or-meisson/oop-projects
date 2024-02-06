@@ -1,17 +1,10 @@
 package Bricker.gameobjects;
 
-import Bricker.brick_straegies.CollisionStrategy;
 import danogl.GameObject;
-import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
-import danogl.util.Counter;
 import danogl.util.Vector2;
 
-public class Brick extends GameObject{
-
-
-	private final CollisionStrategy collisionStrategy;
-//	private GameObject collidedObject; //todo is this ok??
+public class Heart extends GameObject {
 
 	/**
 	 * Construct a new GameObject instance.
@@ -22,19 +15,7 @@ public class Brick extends GameObject{
 	 * @param renderable    The renderable representing the object. Can be null, in which case
 	 *                      the GameObject will not be rendered.
 	 */
-	public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollisionStrategy collisionStrategy) {
+	public Heart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
 		super(topLeftCorner, dimensions, renderable);
-
-		this.collisionStrategy = collisionStrategy;
 	}
-
-	@Override
-	public void onCollisionEnter(GameObject other, Collision collision) {
-		this.collisionStrategy.onCollision(this, other);
-	}
-
-
-
-
-
 }

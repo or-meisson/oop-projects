@@ -4,12 +4,15 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 public class Ball extends GameObject {
 
 	private final Sound collisionSound;
 	private int collisionCounter = 0;
+	private Counter ballExtraPaddleCollision;
+
 
 	/**
 	 * Construct a new GameObject instance.
@@ -20,9 +23,11 @@ public class Ball extends GameObject {
 	 * @param renderable    The renderable representing the object. Can be null, in which case
 	 *                      the GameObject will not be rendered.
 	 */
-	public Ball(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Sound CollisionSound) {
+	public Ball(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Sound CollisionSound,
+				Counter ballExtraPaddleCollision) {
 		super(topLeftCorner, dimensions, renderable);
-		collisionSound = CollisionSound;
+		this.collisionSound = CollisionSound;
+		this.ballExtraPaddleCollision = ballExtraPaddleCollision;
 	}
 
 	public int getCollisionCounter() {
@@ -32,12 +37,15 @@ public class Ball extends GameObject {
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		collisionCounter++;
+		if (other.getTag().equals("extraPaddle")){
+			System.out.println("coolision of ball with extra paddle");
+			ballExtraPaddleCollision.increment();
+		}
 		super.onCollisionEnter(other, collision);
 		Vector2 newVel = getVelocity().flipped(collision.getNormal());
 		setVelocity(newVel);
 		collisionSound.play();
-
-
 	}
+
 
 }

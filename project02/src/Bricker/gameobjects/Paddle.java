@@ -7,14 +7,17 @@ import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
 
-public class UserPaddle extends GameObject {
+public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 300;
 	private final UserInputListener inputListener;
+	public boolean isShowing = false;
 
 
 
-	public UserPaddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener) {
+	public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+				  UserInputListener inputListener, boolean isExtraPaddle) {
 		super(topLeftCorner, dimensions, renderable);
+//		this.isExtraPaddle = isExtraPaddle;
 		this.inputListener = inputListener;
 	}
 
