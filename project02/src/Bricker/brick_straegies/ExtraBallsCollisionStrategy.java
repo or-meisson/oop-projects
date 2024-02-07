@@ -16,6 +16,17 @@ public class ExtraBallsCollisionStrategy implements CollisionStrategy{
 	private Counter brickCounter;
 	private final Ball puck1;
 	private final Ball puck2;
+//	public String strategyType = "extraBalls";
+private boolean isExtraStrategy = false;
+
+	public void setExtraStrategy(boolean extraStrategy) {
+		isExtraStrategy = extraStrategy;
+	}
+
+	public boolean isExtraStrategy() {
+		return isExtraStrategy;
+	}
+
 
 	public ExtraBallsCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter, Ball puck1,
 									   Ball puck2) {
@@ -25,16 +36,20 @@ public class ExtraBallsCollisionStrategy implements CollisionStrategy{
 		this.puck2 = puck2;
 	}
 
+	public String getStrategyType() {
+		return "extraBalls";
+	}
+
 	@Override
 	public void onCollision(GameObject object1, GameObject object2) {
-		System.out.println("collision that caused extra balls");
+//		System.out.println("collision that caused extra balls");
+		if(!isExtraStrategy) { //the main one
+			gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 
-		gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 
-
-		//object 1 is the brick
-		brickCounter.decrement();
-
+			//object 1 is the brick
+			brickCounter.decrement();
+		}
 
 		Vector2 brickPosition = object1.getCenter();
 		puck1.setCenter(brickPosition);

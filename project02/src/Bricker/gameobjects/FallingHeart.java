@@ -1,10 +1,12 @@
 package Bricker.gameobjects;
 
 import danogl.GameObject;
+import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-public class Heart extends GameObject {
+public class FallingHeart extends Heart{
+	public boolean hasCollidedWithPaddle=false;
 
 	/**
 	 * Construct a new GameObject instance.
@@ -15,9 +17,22 @@ public class Heart extends GameObject {
 	 * @param renderable    The renderable representing the object. Can be null, in which case
 	 *                      the GameObject will not be rendered.
 	 */
-	public Heart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+	public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
 		super(topLeftCorner, dimensions, renderable);
 	}
 
+	@Override
+	public void onCollisionEnter(GameObject other, Collision collision) {
+		hasCollidedWithPaddle= true;
+		super.onCollisionEnter(other, collision);
+	}
 
+	@Override
+	public boolean shouldCollideWith(GameObject other) {
+		if(other.getTag().equals("mainPaddle")){
+//			System.out.println("collidin!");
+			return true;
+		}
+		return false;
+	}
 }

@@ -31,7 +31,7 @@ public class BrickerGameManager extends GameManager{
 	private Ball ball;
 	private Vector2 windowDimensions;
 	Counter brickCounter;
-	private int LIVES = 3; //todo what does it man be able to not vhange code to change this
+	Counter LIVES; //todo what does it man be able to not vhange code to change this
 	private UserInputListener inputListener;
 	//todo https://courses.campus.gov.il/courses/course-v1:HUJI+ACD_RFP4_ObjectOrientedProgramming_HE+2022_1/courseware/3c5eb13522a844dc90e602010cf74fcb/038e48e9c496488487acdbfc7a2dd2e6/
 	private WindowController windowController;
@@ -43,7 +43,7 @@ public class BrickerGameManager extends GameManager{
 	private Paddle extraPaddle;
 	private Renderable heartImage;
 
-
+	CameraManager cameraManager;
 
 	List<Ball> listOfPuckBalls = new ArrayList<>();;
 
@@ -68,7 +68,7 @@ public class BrickerGameManager extends GameManager{
 		brickCounter = new Counter(0);
 		ballExtraPaddleCollision =  new Counter(0);
 
-
+ 		LIVES = new Counter(3); //TODO MAYBE PUT IN LIVES MANAGER?
 		this.inputListener = inputListener;
 		this.windowController = windowController;
 
@@ -86,10 +86,13 @@ public class BrickerGameManager extends GameManager{
 		collisionSound = soundReader.readSound("assets/blop_cut_silenced.wav");
 
 		Ball ball = new Ball(Vector2.ZERO, new Vector2(50, 50), ballImage, collisionSound, ballExtraPaddleCollision);
+		ball.setTag("mainBall"); //all these maybe change to another different class
+//		System.out.println(ball.getTag());
 		ball.setVelocity(new Vector2(0, BALL_SPEED));
 		windowDimensions = windowController.getWindowDimensions();
 		ball.setCenter(windowDimensions.mult(0.5F));
 		randomizeDirectionForBall(ball);
+
 		this.ball = ball;
 		gameObjects().addGameObject(ball);
 
@@ -99,10 +102,16 @@ public class BrickerGameManager extends GameManager{
 
 
 		Paddle userPaddle = new Paddle(Vector2.ZERO, new Vector2(100, 15), paddleImage, inputListener, false);
+		userPaddle.setTag("mainPaddle");
+
 		userPaddle.setCenter(new Vector2(windowDimensions.x()/2,(int) windowDimensions.y()-30));
 		gameObjects().addGameObject(userPaddle);
 
-
+		//creating camera
+		Camera camera = new Camera(ball, Vector2.ZERO, windowController.getWindowDimensions().mult(1.2F),
+				windowController.getWindowDimensions());
+		cameraManager = new CameraManager(this, gameObjects(), brickCounter, camera(), camera,
+				ball);
 
 		//creating walls
 		GameObject rightWall = new GameObject(new Vector2(699, 0), new Vector2(3, 500),
@@ -124,6 +133,14 @@ public class BrickerGameManager extends GameManager{
 		extraPaddle.setTag("extraPaddle");
 
 		extraPaddle.setCenter(new Vector2(windowDimensions.x()/2, windowDimensions.y()/2));
+
+
+
+		//creating hearts
+		heartImage = imageReader.readImage("assets/heart.png", true);
+		this.livesManager = new LivesManager(LIVES, gameObjects());
+		livesManager.setLives(windowDimensions, heartImage); //TODO THIS HEARTS ARE COLLIDING EITH BALL!!
+
 
 
 		//creating bricks
@@ -164,10 +181,7 @@ public class BrickerGameManager extends GameManager{
 
 
 
-		//creating hearts
-		heartImage = imageReader.readImage("assets/heart.png", true);
-		this.livesManager = new LivesManager(LIVES, gameObjects());
-		livesManager.setLives(windowDimensions, heartImage);
+
 
 
 
@@ -195,41 +209,109 @@ public class BrickerGameManager extends GameManager{
 		if (randomNumber < 50) {
 			return new BasicCollisionStrategy(gameObjects(), brickCounter);
 		}
-		int randomIndex = new Random().nextInt(5); // Generate a random number between 0 and 4
+		return randomizeSpecialCollisionStrategyOutOf5();
+
+
+	}
+
+
+	private CollisionStrategy randomizeSpecialCollisionStrategyOutOf4() {
+
+
+		int randomIndex = new Random().nextInt(4); // Generate a random number between 0 and 3
 		switch (randomIndex) {
 			case 0:
 				//create puck balls
 				Ball puck1 = createPuckBall(puckImage);
 				Ball puck2 = createPuckBall(puckImage);
+				puck1.setTag("puckBall");
+				puck2.setTag("puckBall");
+
 				return new ExtraBallsCollisionStrategy(gameObjects(), brickCounter, puck1, puck2);
 			case 1:
 				//strategy 3
-//			Paddle extraPaddle = new Paddle(Vector2.ZERO, new Vector2(100, 15), paddleImage, inputListener,
-//					true);
-//			extraPaddle.setTag("extraPaddle");
-//
-//			extraPaddle.setCenter(new Vector2(windowDimensions.x()/2, windowDimensions.y()/2));
-
-//			ballExtraPaddleCollision = new Counter(0);
 				return new ExtraPaddleCollisionStrategy(gameObjects(), brickCounter, extraPaddle);
-//			return new Collision3();
 			case 2:
 				//strategy 4
-				return new CameraCollisionStrategy(gameObjects(), brickCounter);
+//				setCamera();
+
+//				System.out.println(ball.getTag());
+
+
+				return new CameraCollisionStrategy(gameObjects(), brickCounter, cameraManager);
+
 //				return new Collision4();
 			case 3:
 				//strategy 4
-				Heart fallingHeart = this.livesManager.fallingHeart();
-				return new returnLifeCollisionStrategy(gameObjects(), brickCounter, fallingHeart);
+				Heart fallingHeart = this.livesManager.createFallingHeart();
+				return new ReturnLifeCollisionStrategy(gameObjects(), brickCounter, fallingHeart);
 //			return new Collision4();
-			case 4:
-				//strategy 5
-				return new BasicCollisionStrategy(gameObjects(), brickCounter);
-//				return new Collision5();
+
 		}
 		return null;
-
 	}
+
+
+
+	private CollisionStrategy randomizeSpecialCollisionStrategyOutOf5() {
+			int randomIndex = new Random().nextInt(5); // Generate a random number between 0 and 4
+			switch (randomIndex) {
+				case 0:
+				case 1:
+				case 2:
+				case 3:
+					return randomizeSpecialCollisionStrategyOutOf4();
+
+				case 4:
+					//strategy 5
+//					boolean isSecondLayerOfSpecialStrategy = false;
+					List<CollisionStrategy> strategies = new ArrayList<>();
+
+					CollisionStrategy firstStrategy = randomizeSpecialCollisionStrategyOutOf5();
+					if(firstStrategy.getStrategyType().equals("extraStrategy")){
+						CollisionStrategy strategy1 = randomizeSpecialCollisionStrategyOutOf4();
+						CollisionStrategy strategy2 = randomizeSpecialCollisionStrategyOutOf4();
+						CollisionStrategy strategy3 = randomizeSpecialCollisionStrategyOutOf4();
+						strategy2.setExtraStrategy(true);
+						strategy3.setExtraStrategy(true);
+						strategies.add(strategy1);
+						strategies.add(strategy2);
+						strategies.add(strategy3);
+					}
+					else{
+						strategies.add(firstStrategy);
+						CollisionStrategy strategy1 = randomizeSpecialCollisionStrategyOutOf5();
+						if(strategy1.getStrategyType().equals("extraStrategy")){
+							CollisionStrategy strategy2 = randomizeSpecialCollisionStrategyOutOf4();
+							CollisionStrategy strategy3 = randomizeSpecialCollisionStrategyOutOf4();
+							strategy2.setExtraStrategy(true);
+							strategy3.setExtraStrategy(true);
+							strategies.add(strategy2);
+							strategies.add(strategy3);
+
+						}
+						else{
+							strategies.add(strategy1);
+							strategy1.setExtraStrategy(true);
+
+						}
+
+					}
+//					strategies.forEach(System.out::println);
+					return new ExtraStrategyCollisionStrategy(gameObjects(), brickCounter, strategies);
+
+
+
+			}
+
+
+
+
+
+	return null;
+
+		}
+
 
 
 	private void randomizeDirectionForBall(Ball ball) {
@@ -277,7 +359,7 @@ public class BrickerGameManager extends GameManager{
 
 //		System.out.println(g);
 		super.update(deltaTime);
-		System.out.println(brickCounter.value());
+//		System.out.println(brickCounter.value());
 //		System.out.println("changed in update game mangaer");
 		if( brickCounter.value()<= 0){
 			makeWinGame();
@@ -286,8 +368,13 @@ public class BrickerGameManager extends GameManager{
 		float ballHeight = ball.getCenter().y();
 		checkIfPuckBallGoneAndRemove();
 
-		checkIfNeedToRemoveExtraPaddle();
+		this.livesManager.addLivesHeartPaddleCollision();
 
+		this.cameraManager.updateCamera();
+
+
+		checkIfNeedToRemoveExtraPaddle();
+//		this.livesManager.addLivesHeartPaddleCollision();
 		if(ballHeight > 500){
 			this.livesManager.checkForGameEnd(windowController);
 			//reposition ball

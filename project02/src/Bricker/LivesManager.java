@@ -1,22 +1,25 @@
 package Bricker;
 
+import Bricker.gameobjects.FallingHeart;
 import Bricker.gameobjects.Heart;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LivesManager {
-	protected int lives;
+	Counter lives;
 	GameObjectCollection gameObjects;
 	GraphicalLivesManager graphicalLivesManager;
 	private NumericLivesManager numericLivesManager;
 
 
 
-	public LivesManager(int lives, GameObjectCollection gameObjects) {
+	public LivesManager(Counter lives, GameObjectCollection gameObjects) {
 		this.lives = lives;
 		this.gameObjects = gameObjects;  //todo is this ok?
 		this.graphicalLivesManager = new GraphicalLivesManager(lives, gameObjects);
@@ -29,9 +32,9 @@ public class LivesManager {
 //		System.out.println("got here");
 //		System.out.println(graphicalLivesManager.listOfHearts);
 			String prompt = "";
-			lives--;
-			System.out.println(lives);
-			if (lives == 0){ //we lose
+			lives.decrement();
+//			System.out.println(lives);
+			if (lives.value() == 0){ //we lose
 				prompt = "You Lose! Play again?";
 				if(windowController.openYesNoDialog(prompt)){
 					windowController.resetGame();
@@ -44,7 +47,7 @@ public class LivesManager {
 				//todo remove heart
 //				System.out.println("reduced life");
 				graphicalLivesManager.reduceHearts();
-				System.out.println("hozez");
+//				System.out.println("hozez");
 				numericLivesManager.reduceLivesText();
 
 			}
@@ -57,11 +60,18 @@ public class LivesManager {
 		numericLivesManager.initializeLivesText(windowDimensions);
 	}
 
-	public Heart fallingHeart(){
+	public Heart createFallingHeart(){
 		Heart fallingHeart = graphicalLivesManager.createFallingHeart();
 		//todo somthing with the lives in numerix also add it it there ??
 		return fallingHeart;
 	}
+	public void addLivesHeartPaddleCollision(){
+		this.graphicalLivesManager.checkIfFallingHeartsCollided();
+		this.numericLivesManager.reduceLivesText();
+
+	}
+
+
 
 }
 

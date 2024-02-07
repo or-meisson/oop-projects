@@ -22,6 +22,14 @@ public class Paddle extends GameObject {
 	}
 
 	@Override
+	public boolean shouldCollideWith(GameObject other) {
+		if (other.getTag().equals("ball") || other.getTag().equals("fallingHeart") || super.shouldCollideWith(other)){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		Vector2 movementDir = Vector2.ZERO;

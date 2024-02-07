@@ -9,9 +9,25 @@ import danogl.util.Counter;
 public class BasicCollisionStrategy implements CollisionStrategy{
 	private GameObjectCollection gameObjects;
 	private Counter brickCounter;
+	private boolean isExtraStrategy = false;
+
 	public BasicCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter) {
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
+	}
+
+	public boolean isExtraStrategy() {
+		return isExtraStrategy;
+	}
+
+	public void setExtraStrategy(boolean extraStrategy) {
+		isExtraStrategy = extraStrategy;
+	}
+//	public String strategyType = ;
+
+
+	public String getStrategyType() {
+		return "basic";
 	}
 
 	@Override
