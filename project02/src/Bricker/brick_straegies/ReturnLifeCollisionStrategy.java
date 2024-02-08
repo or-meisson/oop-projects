@@ -44,7 +44,7 @@ public class ReturnLifeCollisionStrategy implements CollisionStrategy{
 			gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 			brickCounter.decrement();
 		}
-		Vector2 brickPosition = object1.getCenter();
+		Vector2 brickPosition = object1.getCenter(); //TODO AHOW FUNCTION IN FALLING HEART
 		fallingHeart.setCenter(brickPosition);
 		gameObjects.addGameObject(fallingHeart);
 

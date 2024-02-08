@@ -1,6 +1,7 @@
 package Bricker.brick_straegies;
 
 import Bricker.gameobjects.Ball;
+import Bricker.gameobjects.ExtraPaddle;
 import Bricker.gameobjects.Paddle;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -12,7 +13,7 @@ public class ExtraPaddleCollisionStrategy implements CollisionStrategy {
 
 	GameObjectCollection gameObjects;
 	private Counter brickCounter;
-	private final Paddle extraPaddle;
+	private final ExtraPaddle extraPaddle;
 	private boolean isExtraStrategy = false;
 
 	public void setExtraStrategy(boolean extraStrategy) {
@@ -24,7 +25,8 @@ public class ExtraPaddleCollisionStrategy implements CollisionStrategy {
 	}
 
 
-	public ExtraPaddleCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter, Paddle extraPaddle) {
+	public ExtraPaddleCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter,
+										ExtraPaddle extraPaddle) {
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
 		this.extraPaddle = extraPaddle;
@@ -45,8 +47,8 @@ public class ExtraPaddleCollisionStrategy implements CollisionStrategy {
 			brickCounter.decrement();
 		}
 
-		if(!extraPaddle.isShowing){
-		extraPaddle.isShowing = true;
+		if(!extraPaddle.isShowing()){
+		extraPaddle.setShowing(true);
 		gameObjects.addGameObject(extraPaddle);}
 
 	}

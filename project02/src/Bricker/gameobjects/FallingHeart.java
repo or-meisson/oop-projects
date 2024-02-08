@@ -20,16 +20,16 @@ public class FallingHeart extends Heart{
 	public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
 		super(topLeftCorner, dimensions, renderable);
 	}
-
+	//todo falling heart still remains when its passes 500
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
-		hasCollidedWithPaddle= true;
+		hasCollidedWithPaddle= true; //TODO GETTER
 		super.onCollisionEnter(other, collision);
 	}
 
 	@Override
 	public boolean shouldCollideWith(GameObject other) {
-		if(other.getTag().equals("mainPaddle")){
+		if(other.getTag().equals("mainPaddle")){ //TODO GET FROM CONSTRUCTOR
 //			System.out.println("collidin!");
 			return true;
 		}

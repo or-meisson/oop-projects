@@ -41,7 +41,8 @@ private boolean isExtraStrategy = false;
 	}
 
 	@Override
-	public void onCollision(GameObject object1, GameObject object2) {
+	public void onCollision(GameObject object1, GameObject object2) { // todo maybe do extends basic
+		// collision AND THEM IT EILL BE WITH SUPER
 //		System.out.println("collision that caused extra balls");
 		if(!isExtraStrategy) { //the main one
 			gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);

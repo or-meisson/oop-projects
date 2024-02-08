@@ -1,4 +1,4 @@
-package Bricker.main;
+package Bricker.managers;
 
 import Bricker.gameobjects.Ball;
 import danogl.GameManager;
@@ -21,17 +21,13 @@ public class CameraManager {
 		this.gameManager = gameManager;
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
-		this.cameraFunc = cameraFunc;
 		this.camera = camera;
 
 		this.ball = ball;
-		System.out.println(ball.getTag());
 
 	}
 
-	public Camera getCamera() {
-		return cameraFunc;
-	}
+
 
 	public void setCamera(){
 		if (this.gameManager.camera()==null){

@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 300;
 	private final UserInputListener inputListener;
-	public boolean isShowing = false;
 
 
 
@@ -47,7 +46,7 @@ public class Paddle extends GameObject {
 
 		}
 
-		if (topLeftCorner.x() >= 600){
+		if (topLeftCorner.x() >= 600){ //TODO GET FROM CONSTRUCTOR
 			setTopLeftCorner(new Vector2(700 -getDimensions().x(), topLeftCorner.y()));
 		}
 	}

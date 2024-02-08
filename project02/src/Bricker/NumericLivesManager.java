@@ -33,7 +33,7 @@ public class NumericLivesManager {
 
 
 
-	public void reduceLivesText(){
+	public void handleLivesText(){
 		if(lives.value()==4){
 			livesTextRenderable.setString("4");
 			livesTextRenderable.setColor(Color.GREEN);

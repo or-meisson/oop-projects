@@ -37,9 +37,9 @@ public class Ball extends GameObject {
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		collisionCounter++;
-		if (other.getTag().equals("extraPaddle")){
-			System.out.println("coolision of ball with extra paddle");
-			ballExtraPaddleCollision.increment();
+		if (other.getTag().equals("extraPaddle")){ //TODO GET IN CONSTRUCTOR
+//			System.out.println("coolision of ball with extra paddle");
+			ballExtraPaddleCollision.increment(); //TODO COUNT IN EXTRA PADDLE
 		}
 		super.onCollisionEnter(other, collision);
 		Vector2 newVel = getVelocity().flipped(collision.getNormal());

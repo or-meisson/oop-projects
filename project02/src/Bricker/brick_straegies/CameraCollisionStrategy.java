@@ -1,12 +1,10 @@
 package Bricker.brick_straegies;
 
-import Bricker.main.CameraManager;
+import Bricker.managers.CameraManager;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
-import danogl.gui.rendering.Camera;
 import danogl.util.Counter;
-import danogl.util.Vector2;
 
 public class CameraCollisionStrategy implements CollisionStrategy{
 	GameObjectCollection gameObjects;
@@ -37,7 +35,7 @@ public class CameraCollisionStrategy implements CollisionStrategy{
 
 
 	@Override
-	public void onCollision(GameObject object1, GameObject object2) {
+	public void onCollision(GameObject object1, GameObject object2) { //todo get the tag from constructor
 		if(!isExtraStrategy) { //the main one
 
 
