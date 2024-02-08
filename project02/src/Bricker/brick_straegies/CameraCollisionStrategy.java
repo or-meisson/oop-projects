@@ -7,50 +7,47 @@ import danogl.collisions.Layer;
 import danogl.util.Counter;
 
 public class CameraCollisionStrategy implements CollisionStrategy{
-	GameObjectCollection gameObjects;
+	private GameObjectCollection gameObjects;
 	private Counter brickCounter;
+	private final String strategyType = "camera";
+
 	private CameraManager cameraManager;
+	private final String tagToNotice;
 	private boolean isExtraStrategy = false;
+
+
+
+	public CameraCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter,
+								   CameraManager cameraManager, String tagToNotice) {
+		this.gameObjects = gameObjects;
+		this.brickCounter = brickCounter;
+		this.cameraManager = cameraManager;
+//		this.strategyType = "camera";
+
+		this.tagToNotice = tagToNotice;
+	}
 
 	public void setExtraStrategy(boolean extraStrategy) {
 		isExtraStrategy = extraStrategy;
 	}
 
-	public boolean isExtraStrategy() {
-		return isExtraStrategy;
-	}
-//	public String strategyType =
-
-	public String getStrategyType() {
-		return "camera";
-	}
-	public CameraCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter,
-								   CameraManager cameraManager) {
-		this.gameObjects = gameObjects;
-		this.brickCounter = brickCounter;
-		this.cameraManager = cameraManager;
-
-	}
-
 
 
 	@Override
-	public void onCollision(GameObject object1, GameObject object2) { //todo get the tag from constructor
+	public String getStrategyType() {
+		return strategyType;
+	}
+
+	@Override
+	public void onCollision(GameObject object1, GameObject object2) {
 		if(!isExtraStrategy) { //the main one
-
-
 		gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
-		brickCounter.decrement();}
-//		System.out.println(object2.getTag());
-		//object 1 is the brick
-
-		if(object2.getTag().equals("mainBall")) {
-//			System.out.println("collided with camera brick, state of camera:");
-//			System.out.println(cameraManager.getCamera());
-//			if (cameraManager.getCamera() == null) {
-				cameraManager.setCamera();
-//			}
+		brickCounter.decrement();
 		}
+		if(object2.getTag().equals(tagToNotice)) {
+			cameraManager.setCamera();
+		}
+
 
 	}
 

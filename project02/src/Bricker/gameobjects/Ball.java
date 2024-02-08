@@ -11,7 +11,8 @@ public class Ball extends GameObject {
 
 	private final Sound collisionSound;
 	private int collisionCounter = 0;
-	private Counter ballExtraPaddleCollision;
+	private final Counter ballExtraPaddleCollision;
+	private final String tagToNotice;
 
 
 	/**
@@ -24,10 +25,11 @@ public class Ball extends GameObject {
 	 *                      the GameObject will not be rendered.
 	 */
 	public Ball(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, Sound CollisionSound,
-				Counter ballExtraPaddleCollision) {
+				Counter ballExtraPaddleCollision, String tagToNotice) {
 		super(topLeftCorner, dimensions, renderable);
 		this.collisionSound = CollisionSound;
 		this.ballExtraPaddleCollision = ballExtraPaddleCollision;
+		this.tagToNotice = tagToNotice;
 	}
 
 	public int getCollisionCounter() {
@@ -37,9 +39,8 @@ public class Ball extends GameObject {
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		collisionCounter++;
-		if (other.getTag().equals("extraPaddle")){ //TODO GET IN CONSTRUCTOR
-//			System.out.println("coolision of ball with extra paddle");
-			ballExtraPaddleCollision.increment(); //TODO COUNT IN EXTRA PADDLE
+		if (other.getTag().equals(tagToNotice)){
+			ballExtraPaddleCollision.increment();
 		}
 		super.onCollisionEnter(other, collision);
 		Vector2 newVel = getVelocity().flipped(collision.getNormal());

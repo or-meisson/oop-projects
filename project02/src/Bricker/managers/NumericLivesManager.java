@@ -1,4 +1,4 @@
-package Bricker;
+package Bricker.managers;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
@@ -10,10 +10,11 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 public class NumericLivesManager {
-	Counter lives;
-	private GameObjectCollection gameObjects;
-	private TextRenderable livesTextRenderable;
-	private GameObject livesText;
+	private static final Vector2 LIVES_TEXT_TOP_LEFT_CORNER = new Vector2(670, 470);
+	private static final Vector2 LIVES_TEXT_DIMENSIONS = new Vector2(30, 30);
+	private final Counter lives;
+	private final GameObjectCollection gameObjects;
+	private final TextRenderable livesTextRenderable;
 
 	public NumericLivesManager(Counter lives, GameObjectCollection gameObjects) {
 		this.lives = lives;
@@ -22,11 +23,9 @@ public class NumericLivesManager {
 	}
 
 
-	public void initializeLivesText(Vector2 windowDimensions){
-
-//		TextRenderable livesTextRenderable = new TextRenderable(Integer.toString(lives));
-		livesTextRenderable.setColor(Color.GREEN);
-		livesText = new GameObject(new Vector2(670, 470), new Vector2(30, 30),
+	public void initializeLivesText(){
+		livesTextRenderable.setColor(Color.GREEN);//todo constant?
+		GameObject livesText = new GameObject(LIVES_TEXT_TOP_LEFT_CORNER, LIVES_TEXT_DIMENSIONS,
 				livesTextRenderable);
 		gameObjects.addGameObject(livesText,Layer.UI);
 	}
@@ -36,9 +35,8 @@ public class NumericLivesManager {
 	public void handleLivesText(){
 		if(lives.value()==4){
 			livesTextRenderable.setString("4");
-			livesTextRenderable.setColor(Color.GREEN);
+			livesTextRenderable.setColor(Color.GREEN); //todo constant?
 		}
-//		lives.decrement();
 		if(lives.value()==3){
 			livesTextRenderable.setString("3");
 			livesTextRenderable.setColor(Color.GREEN);
@@ -56,8 +54,5 @@ public class NumericLivesManager {
 
 	}
 
-//	public void updateLives() {
-//		livesTextRenderable.
-//
-//	}
+
 }

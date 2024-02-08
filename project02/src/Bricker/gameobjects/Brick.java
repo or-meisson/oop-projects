@@ -11,7 +11,6 @@ public class Brick extends GameObject{
 
 
 	private final CollisionStrategy collisionStrategy;
-//	private GameObject collidedObject; //todo is this ok??
 
 	/**
 	 * Construct a new GameObject instance.

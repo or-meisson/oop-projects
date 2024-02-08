@@ -10,18 +10,20 @@ import java.awt.event.KeyEvent;
 public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 300;
 	private final UserInputListener inputListener;
-
+	private final float leftXPointForPaddle;
+	private final float rightXPointForPaddle;
 
 
 	public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
-				  UserInputListener inputListener, boolean isExtraPaddle) {
+				  UserInputListener inputListener, float leftXPointForPaddle, float rightXPointForPaddle) {
 		super(topLeftCorner, dimensions, renderable);
-//		this.isExtraPaddle = isExtraPaddle;
 		this.inputListener = inputListener;
+		this.leftXPointForPaddle = leftXPointForPaddle;
+		this.rightXPointForPaddle = rightXPointForPaddle;
 	}
 
 	@Override
-	public boolean shouldCollideWith(GameObject other) {
+	public boolean shouldCollideWith(GameObject other) {//todo change!
 		if (other.getTag().equals("ball") || other.getTag().equals("fallingHeart") || super.shouldCollideWith(other)){
 			return true;
 		}
@@ -41,12 +43,12 @@ public class Paddle extends GameObject {
 		setVelocity(movementDir.mult(MOVEMENT_SPEED));
 		Vector2 topLeftCorner = getTopLeftCorner();
 
-		if (topLeftCorner.x() < 0) {
+		if (topLeftCorner.x() < leftXPointForPaddle) {
 			setTopLeftCorner(new Vector2(0, topLeftCorner.y()));
 
 		}
 
-		if (topLeftCorner.x() >= 600){ //TODO GET FROM CONSTRUCTOR
+		if (topLeftCorner.x() >= rightXPointForPaddle){ //TODO GET FROM CONSTRUCTOR
 			setTopLeftCorner(new Vector2(700 -getDimensions().x(), topLeftCorner.y()));
 		}
 	}

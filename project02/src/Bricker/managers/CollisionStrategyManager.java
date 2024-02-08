@@ -19,7 +19,6 @@ public class CollisionStrategyManager {
 	private final PaddlesManager paddlesManager;
 	private final CameraManager cameraManager;
 	private final LivesManager livesManager;
-
 	private int MAX_NUM_TO_RANDOMIZE_STRATEGY = 10;
 	private int MAX_NUM_TO_RANDOMIZE_BASIC_STRATEGY = 5;
 	private int MAX_NUM_TO_RANDOMIZE_SPECIAL_STRATEGY = 4;
@@ -42,9 +41,8 @@ public class CollisionStrategyManager {
 
 
 
-	CollisionStrategy randomizeCollisionStrategy() { //do i really want the pucks here?
-		int randomNumber = new Random().nextInt(MAX_NUM_TO_RANDOMIZE_STRATEGY); // Generate a random number between 0 and 9
-//		Renderable puckImage = imageReader.readImage("assets/mockBall.png", true);
+	public CollisionStrategy randomizeCollisionStrategy() {
+		int randomNumber = new Random().nextInt(MAX_NUM_TO_RANDOMIZE_STRATEGY);
 		if (randomNumber < MAX_NUM_TO_RANDOMIZE_BASIC_STRATEGY) {
 			return new BasicCollisionStrategy(gameObjects, brickCounter);
 		}
@@ -53,30 +51,28 @@ public class CollisionStrategyManager {
 
 
 
-//TODO move to designted factory
+
 
 	private CollisionStrategy randomizeSpecialCollisionStrategyWithoutExtraStrategy() {
 		int randomIndex = new Random().nextInt(MAX_NUM_TO_RANDOMIZE_SPECIAL_STRATEGY); // Generate a random number between 0 and 3
 		switch (randomIndex) {
 			case 0:
 				//create puck balls
-				Ball puck1 = ballsManager.createPuckBall(); //todo move from here
+				Ball puck1 = ballsManager.createPuckBall();
 				Ball puck2 = ballsManager.createPuckBall();
 				puck1.setTag("puckBall");
 				puck2.setTag("puckBall");
-
 				return new ExtraBallsCollisionStrategy(gameObjects, brickCounter, puck1, puck2);
 			case 1:
 
 				return new ExtraPaddleCollisionStrategy(gameObjects, brickCounter, paddlesManager.getExtraPaddle());
 			case 2:
 
-				return new CameraCollisionStrategy(gameObjects, brickCounter, cameraManager);
+				return new CameraCollisionStrategy(gameObjects, brickCounter, cameraManager, "mainBall");
 
 			case 3:
 				Heart fallingHeart = this.livesManager.createFallingHeart();
 				return new ReturnLifeCollisionStrategy(gameObjects, brickCounter, fallingHeart);
-//			return new Collision4();
 
 		}
 		return null;
@@ -85,7 +81,7 @@ public class CollisionStrategyManager {
 
 
 	private CollisionStrategy randomizeSpecialCollisionStrategy() {
-		int randomIndex = new Random().nextInt(5); // Generate a random number between 0 and 4
+		int randomIndex = new Random().nextInt(MAX_NUM_TO_RANDOMIZE_BASIC_STRATEGY); // Generate a random number between 0 and 4
 		switch (randomIndex) {
 			case 0:
 			case 1:
@@ -95,11 +91,10 @@ public class CollisionStrategyManager {
 
 			case 4:
 				//strategy 5
-//					boolean isSecondLayerOfSpecialStrategy = false;
 				List<CollisionStrategy> strategies = new ArrayList<>();
 
 				CollisionStrategy firstStrategy = randomizeSpecialCollisionStrategy();
-				if(firstStrategy.getStrategyType().equals("extraStrategy")){ //TODO change to idxes not
+				if(firstStrategy.getStrategyType().equals("extraStrategy")){
 					// types
 					CollisionStrategy strategy1 = randomizeSpecialCollisionStrategyWithoutExtraStrategy();
 					CollisionStrategy strategy2 = randomizeSpecialCollisionStrategyWithoutExtraStrategy();
@@ -116,7 +111,7 @@ public class CollisionStrategyManager {
 					if(strategy1.getStrategyType().equals("extraStrategy")){
 						CollisionStrategy strategy2 = randomizeSpecialCollisionStrategyWithoutExtraStrategy();
 						CollisionStrategy strategy3 = randomizeSpecialCollisionStrategyWithoutExtraStrategy();
-						strategy2.setExtraStrategy(true); //todo do a designated function
+						strategy2.setExtraStrategy(true);
 						strategy3.setExtraStrategy(true);
 						strategies.add(strategy2);
 						strategies.add(strategy3);
@@ -129,15 +124,11 @@ public class CollisionStrategyManager {
 					}
 
 				}
-				return new ExtraStrategyCollisionStrategy(gameObjects, brickCounter, strategies);
+				return new ExtraStrategyCollisionStrategy(strategies);
 
 
 
 		}
-
-
-
-
 
 		return null;
 

@@ -12,28 +12,25 @@ import danogl.util.Vector2;
 public class PaddlesManager {
 
 
-	public static final int HITS_NUM_TO_REMOVE_EXTRA_PADDLE = 4;
-	private final ImageReader imageReader;
-	private Vector2 windowDimensions;
+	private static final int HITS_NUM_TO_REMOVE_EXTRA_PADDLE = 4;
+	private static final String PADDLE_IMG_PATH = "assets/paddle.png";
+	private static final Vector2 EXTRA_PADDLE_DIMENSIONS = new Vector2(100, 15);
+	private final Vector2 windowDimensions;
 	private final GameObjectCollection gameObjects;
-	private Renderable paddleImage;
+	private final Renderable paddleImage;
 	private final UserInputListener inputListener;
-	private final Vector2 PADDLE_SIZE = new Vector2(100, 15);
-//	private final float PADDLE_POSITION_X
-//	private final Vector2 MAIN_PADDLE_POSITION = new Vector2(windowDimensions.x()/2,
-//		(int) windowDimensions.y()-30);
-	private Counter ballExtraPaddleCollision;
+	private final float PADDLE_HEIGHT = 15;
+	private final float PADDLE_WIDTH = 100;
+	private final Counter ballExtraPaddleCollision;
 	private ExtraPaddle extraPaddle;
 
 
 
 	public PaddlesManager(ImageReader imageReader, Vector2 windowDimensions,
 						  GameObjectCollection gameObjects, UserInputListener inputListener) {
-		this.imageReader = imageReader;
 		this.windowDimensions = windowDimensions;
 		this.gameObjects = gameObjects;
-
-		paddleImage = imageReader.readImage("assets/paddle.png", true);
+		paddleImage = imageReader.readImage(PADDLE_IMG_PATH, true);
 		this.inputListener = inputListener;
 		ballExtraPaddleCollision =  new Counter(0);
 
@@ -44,23 +41,27 @@ public class PaddlesManager {
 	}
 
 
-	public Paddle createMainPaddle(){
+	public void createMainPaddle(){
 
-		Paddle userPaddle = new Paddle(Vector2.ZERO, PADDLE_SIZE, paddleImage, inputListener, false);
+		Paddle userPaddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage,
+				inputListener, 0,
+				windowDimensions.x() - PADDLE_WIDTH);
 		userPaddle.setCenter(new Vector2(windowDimensions.x()/2,
-				(int) windowDimensions.y()-30));
+				(int) windowDimensions.y()-30)); //TODO HOW TO MAKE CONSTANT?
 		gameObjects.addGameObject(userPaddle);
-		return userPaddle;
+		userPaddle.setTag("mainPaddle");
+
 
 	}
 
 
-	public Paddle createExtraPaddle(){
-		ExtraPaddle extraPaddle = new ExtraPaddle(Vector2.ZERO, new Vector2(100, 15), paddleImage, inputListener,
-				true);
-		extraPaddle.setCenter(new Vector2(windowDimensions.x()/2, windowDimensions.y()/2));
+	public void createExtraPaddle(){
+		ExtraPaddle extraPaddle = new ExtraPaddle(Vector2.ZERO, EXTRA_PADDLE_DIMENSIONS, paddleImage,
+				inputListener, 0, windowDimensions.x() - PADDLE_WIDTH);
+		extraPaddle.setCenter(new Vector2(windowDimensions.x()/2, windowDimensions.y()/2)); //TODO HOW TO MAKE CONSTANT?
 		this.extraPaddle = extraPaddle;
-		return extraPaddle;
+		extraPaddle.setTag("extraPaddle");
+
 
 
 	}

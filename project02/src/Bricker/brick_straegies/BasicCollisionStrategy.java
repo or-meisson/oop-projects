@@ -7,35 +7,34 @@ import danogl.collisions.Layer;
 import danogl.util.Counter;
 
 public class BasicCollisionStrategy implements CollisionStrategy{
-	private GameObjectCollection gameObjects;
+	private static final String BASIC_COLLISION_PROMPT = "collision with brick detected";
+	private final String strategyType  =  "basic";
+	private final GameObjectCollection gameObjects;
 	private Counter brickCounter;
 	private boolean isExtraStrategy = false;
 
 	public BasicCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter) {
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
+//		this.strategyType =  "basic";
 	}
 
-	public boolean isExtraStrategy() {
-		return isExtraStrategy;
-	}
 
 	public void setExtraStrategy(boolean extraStrategy) {
 		isExtraStrategy = extraStrategy;
 	}
-//	public String strategyType = ;
 
 
+	@Override
 	public String getStrategyType() {
-		return "basic";
+		return strategyType;
 	}
 
 	@Override
 	public void onCollision(GameObject object1, GameObject object2) {
-		System.out.println("collision with brick detected");
+		System.out.println(BASIC_COLLISION_PROMPT);
 		gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 		brickCounter.decrement();
-//		System.out.println(brickCounter.value());
 
 
 	}

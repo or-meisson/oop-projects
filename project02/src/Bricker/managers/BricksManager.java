@@ -1,9 +1,7 @@
 package Bricker.managers;
 
 import Bricker.brick_straegies.*;
-import Bricker.gameobjects.Ball;
 import Bricker.gameobjects.Brick;
-import Bricker.gameobjects.Heart;
 import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -11,23 +9,18 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+
 
 public class BricksManager {
+	private static final String BRICK_IMG_PATH = "assets/brick.png";
 	private final int GAP_BETWEEN_BRICKS = 5;
 	private final int BRICK_HEIGHT = 15;
-
-
 	private final GameObjectCollection gameObjects;
-	//	private final ImageReader imageReader;
 	private final int rowsOfBricks;
 	private final int brickInRow;
 	private final Vector2 windowDimensions;
-	private Counter brickCounter;
-	private Renderable brickImage;
-	private CollisionStrategyManager collisionStrategyManager;
+	private final Counter brickCounter;
+	private final Renderable brickImage;
 
 
 
@@ -35,13 +28,11 @@ public class BricksManager {
 						 int rowsOfBricks, int brickInRow, Vector2 windowDimensions
 						 ) {
 		this.gameObjects = gameObjects;
-//		this.imageReader = imageReader;
 		this.rowsOfBricks = rowsOfBricks;
 		this.brickInRow = brickInRow;
 		this.windowDimensions = windowDimensions;
 		this.brickCounter = new Counter(0);
-		this.brickImage = imageReader.readImage("assets/brick.png", false);
-//		this.collisionStrategyManager = collisionStrategyManager;
+		this.brickImage = imageReader.readImage(BRICK_IMG_PATH, false);
 
 
 	}

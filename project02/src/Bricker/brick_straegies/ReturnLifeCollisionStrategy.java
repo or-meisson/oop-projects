@@ -9,19 +9,14 @@ import danogl.util.Vector2;
 
 public class ReturnLifeCollisionStrategy implements CollisionStrategy{
 
-	GameObjectCollection gameObjects;
+	private final GameObjectCollection gameObjects;
 	private Counter brickCounter;
 	private Heart fallingHeart;
-//	public String strategyType = "returnLife";
 	private boolean isExtraStrategy = false;
+	private final String strategyType = "returnLife";
 
-	public void setExtraStrategy(boolean extraStrategy) {
-		isExtraStrategy = extraStrategy;
-	}
 
-	public boolean isExtraStrategy() {
-		return isExtraStrategy;
-	}
+
 
 
 
@@ -30,12 +25,18 @@ public class ReturnLifeCollisionStrategy implements CollisionStrategy{
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
 		this.fallingHeart = fallingHeart;
+//		this.strategyType = "returnLife";
 	}
 
+	public void setExtraStrategy(boolean extraStrategy) {
+		isExtraStrategy = extraStrategy;
+	}
+
+
+	@Override
 	public String getStrategyType() {
-		return "returnLife";
+		return strategyType;
 	}
-
 
 	@Override
 	public void onCollision(GameObject object1, GameObject object2) {
@@ -44,7 +45,7 @@ public class ReturnLifeCollisionStrategy implements CollisionStrategy{
 			gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 			brickCounter.decrement();
 		}
-		Vector2 brickPosition = object1.getCenter(); //TODO AHOW FUNCTION IN FALLING HEART
+		Vector2 brickPosition = object1.getCenter();
 		fallingHeart.setCenter(brickPosition);
 		gameObjects.addGameObject(fallingHeart);
 

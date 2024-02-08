@@ -11,18 +11,13 @@ import danogl.util.Counter;
 public class ExtraPaddleCollisionStrategy implements CollisionStrategy {
 
 
-	GameObjectCollection gameObjects;
-	private Counter brickCounter;
+	private final GameObjectCollection gameObjects;
+	private final Counter brickCounter;
 	private final ExtraPaddle extraPaddle;
 	private boolean isExtraStrategy = false;
+	private final String strategyType = "extraPaddle";
 
-	public void setExtraStrategy(boolean extraStrategy) {
-		isExtraStrategy = extraStrategy;
-	}
 
-	public boolean isExtraStrategy() {
-		return isExtraStrategy;
-	}
 
 
 	public ExtraPaddleCollisionStrategy(GameObjectCollection gameObjects, Counter brickCounter,
@@ -30,19 +25,23 @@ public class ExtraPaddleCollisionStrategy implements CollisionStrategy {
 		this.gameObjects = gameObjects;
 		this.brickCounter = brickCounter;
 		this.extraPaddle = extraPaddle;
+//		this.strategyType = "extraPaddle";
 	}
 
+	public void setExtraStrategy(boolean extraStrategy) {
+		isExtraStrategy = extraStrategy;
+	}
+
+
+	@Override
 	public String getStrategyType() {
-		return "extraPaddle";
+		return strategyType;
 	}
 
 	@Override
 	public void onCollision(GameObject object1, GameObject object2) {
 		//object 1 is the brick
-//		System.out.println("collision eith brick that makes extra paddle");
-
 		if(!isExtraStrategy) { //the main one
-
 			gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
 			brickCounter.decrement();
 		}

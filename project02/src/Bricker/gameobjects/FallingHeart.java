@@ -6,7 +6,10 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 public class FallingHeart extends Heart{
-	public boolean hasCollidedWithPaddle=false;
+
+
+	private final String tagToNotice;
+	private boolean hasCollidedWithPaddle=false;
 
 	/**
 	 * Construct a new GameObject instance.
@@ -17,20 +20,28 @@ public class FallingHeart extends Heart{
 	 * @param renderable    The renderable representing the object. Can be null, in which case
 	 *                      the GameObject will not be rendered.
 	 */
-	public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+	public FallingHeart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+						String tagToNotice) {
 		super(topLeftCorner, dimensions, renderable);
+		this.tagToNotice = tagToNotice;
 	}
-	//todo falling heart still remains when its passes 500
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
-		hasCollidedWithPaddle= true; //TODO GETTER
+		setHasCollidedWithPaddle(true);
 		super.onCollisionEnter(other, collision);
+	}
+
+	private void setHasCollidedWithPaddle(boolean hasCollidedWithPaddle) {
+		this.hasCollidedWithPaddle = hasCollidedWithPaddle;
+	}
+
+	public boolean isHasCollidedWithPaddle() {
+		return hasCollidedWithPaddle;
 	}
 
 	@Override
 	public boolean shouldCollideWith(GameObject other) {
-		if(other.getTag().equals("mainPaddle")){ //TODO GET FROM CONSTRUCTOR
-//			System.out.println("collidin!");
+		if(other.getTag().equals(tagToNotice)){
 			return true;
 		}
 		return false;
