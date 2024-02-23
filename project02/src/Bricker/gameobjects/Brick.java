@@ -1,19 +1,26 @@
-package Bricker.gameobjects;
 
-import Bricker.brick_straegies.CollisionStrategy;
+package bricker.gameobjects;
+
+import bricker.brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * Represents a brick GameObject.
+ *
+ * @author Or Meissonnier
+ *
+ */
 public class Brick extends GameObject{
 
 
 	private final CollisionStrategy collisionStrategy;
 
 	/**
-	 * Construct a new GameObject instance.
+	 * Construct a new Brick instance.
 	 *
 	 * @param topLeftCorner Position of the object, in window coordinates (pixels).
 	 *                      Note that (0,0) is the top-left corner of the window.
@@ -21,12 +28,19 @@ public class Brick extends GameObject{
 	 * @param renderable    The renderable representing the object. Can be null, in which case
 	 *                      the GameObject will not be rendered.
 	 */
-	public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollisionStrategy collisionStrategy) {
+	public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+				 CollisionStrategy collisionStrategy) {
 		super(topLeftCorner, dimensions, renderable);
 
 		this.collisionStrategy = collisionStrategy;
 	}
 
+	/**
+	 * Handles the collision event with another GameObject.
+	 *
+	 * @param other     The GameObject collided with.
+	 * @param collision The collision details.
+	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		this.collisionStrategy.onCollision(this, other);
