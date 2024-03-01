@@ -31,7 +31,7 @@ public class CharBrightnessCalculator {
 	 * @param c The character to calculate the brightness of.
 	 * @return The brightness of the character.
 	 */
-	static double calculateCurrentBrightness(char c) {
+	public static double calculateCurrentBrightness(char c) {
 		boolean[][] boolArray = CharConverter.convertToBoolArray(c);
 		double sum = 0;
 		for (boolean[] booleans : boolArray) {

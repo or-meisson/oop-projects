@@ -5,6 +5,7 @@ import ascii_output.AsciiOutput;
 import ascii_output.ConsoleAsciiOutput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
+import image.ImgPadder;
 import image_char_matching.SubImgCharMatcher;
 
 import java.io.IOException;
@@ -56,14 +57,15 @@ public class Shell {
 	private static final String INCORRECT_FORMAT_TO_ADD_CHARS_MSG = "Did not add due to" +
 			" incorrect format.";
 	private static final String REGEX = "\\s+";
+	private static final String EMPTY_CHARSET_ERROR_MSG = "Did not execute. Charset is empty.";
 	private final Set<Character> sortedCharset = new TreeSet<>(Arrays.asList
 			('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
 
 	private int resolution = 128;
-	private int imgHeight = 128;
-	private int maxCharsInRow = 128;
-	private int minCharsInRow = 1;
-	private AsciiOutput output;
+//	private int imgHeight = 128;
+//	private int maxCharsInRow;
+//	private int minCharsInRow;
+	private AsciiOutput output = new ConsoleAsciiOutput();
 	private AsciiArtAlgorithm asciiArtAlgorithm;
 	private SubImgCharMatcher subImgCharMatcher;
 	private Image image = null;
@@ -75,9 +77,12 @@ public class Shell {
 	public Shell() {
 		try {
 			image = new Image(DEFAULT_IMAGE);
+			image = ImgPadder.padImage(image);
 		} catch (IOException e) {
 			System.out.println(INVALID_IMAGE_FILE);
 		}
+//		maxCharsInRow = image.getWidth();
+//		minCharsInRow = max(1, image.getWidth()/ image.getHeight());
 	}
 
 
@@ -101,18 +106,19 @@ public class Shell {
 				} else if (parts[0].equals(TO_CHANGE_RESOLUTION)) {
 					handleResolution(parts);
 				} else if (parts[0].equals(TO_CHANGE_IMAGE)) {
-					image = handleImageChange(image, parts);
+					image = handleImageChange(parts);
 				} else if (parts[0].equals(TO_CHANGE_OUTPUT)) {
 					handleOutputs(parts);
 				} else if (parts[0].equals(TO_RUN_ASCII_ART)) {
-					runAsciiArtAlgorithm(image);
+					runAsciiArtAlgorithm();
 				} else {
 					throw new IncorrectCommandException(INCORRECT_COMMAND);
 				}
 			}
 			catch (ResolutionIncorrectFormatException | ResolutionExceedingBoundariesException |
 					IncorrectCommandException | OutputIncorrectFormatException |
-					RemoveIncorrectFormatException | AddIncorrectFormatException e) {
+					RemoveIncorrectFormatException | AddIncorrectFormatException |
+				   EmptyCharsetException e) {
 				System.out.println(e.getMessage());
 			}
 			System.out.print(PROMPT);
@@ -140,35 +146,40 @@ public class Shell {
 
 	/**
 	 * Handle the change of the image.
-	 * @param image The current image.
 	 * @param parts The parts of the input.
 	 * @return The new image.
 	 */
-	private Image handleImageChange(Image image, String[] parts) {
+	private Image handleImageChange(String[] parts) {
 		try{
-			System.out.println("parts[1] = " + parts[1]);
-			image = new Image(parts[1]);
-			updateAsciiAlgorithm();
-			maxCharsInRow = image.getWidth();
-			minCharsInRow = max(1, image.getWidth()/ image.getHeight());
+			this.image = new Image(parts[1]);
+			this.image = ImgPadder.padImage(this.image);
+
+			updateAlgorithm();
+//			maxCharsInRow = image.getWidth();
+//			minCharsInRow = max(1, image.getWidth()/ image.getHeight());
+
 	}
 		catch (IOException e){
 			System.out.println(INVALID_IMAGE_FILE);
 		}
-		return image;
+		return this.image;
 //		hasImageChagnes = true;
 	}
 
-	private void updateAsciiAlgorithm(){
+	/**
+	 * Update the ascii algorithm.
+	 */
+	private void updateAlgorithm(){
 		asciiArtAlgorithm = new AsciiArtAlgorithm(image, resolution, subImgCharMatcher);
 	}
 
 	/**
 	 * Run the ascii art algorithm.
-	 * @param image The image to convert to ascii.
 	 */
-	private void runAsciiArtAlgorithm(Image image) {
-
+	private void runAsciiArtAlgorithm() throws EmptyCharsetException{
+		if (sortedCharset.isEmpty()){
+			throw new EmptyCharsetException(EMPTY_CHARSET_ERROR_MSG);
+		}
 		char[][] asciiPixelArray = asciiArtAlgorithm.run();
 		output.out(asciiPixelArray);
 	}
@@ -202,24 +213,27 @@ public class Shell {
 			ResolutionExceedingBoundariesException{
 		if (parts.length == 2) {
 			if (parts[1].equals(TO_INCREASE_RES)) {
-				if (resolution*2 <= maxCharsInRow){
+//				System.out.println(maxCharsInRow);
+				if (resolution*2 <= image.getWidth()){
+//					System.out.println(image.getWidth());
 					resolution *= 2;
-					updateAsciiAlgorithm();
-					maxCharsInRow = resolution;
-					minCharsInRow = max(1, resolution/imgHeight);
-					System.out.println(RESOLUTION_SET_TO_MSG + resolution);
+					updateAlgorithm();
+//					maxCharsInRow = resolution;
+//					minCharsInRow = max(1, resolution/imgHeight);
+					System.out.println(RESOLUTION_SET_TO_MSG + resolution + ".");
 				}
 				else{
-					System.out.println(EXCEEDING_BOUNDARIES);
+					throw new ResolutionExceedingBoundariesException(EXCEEDING_BOUNDARIES);
+//					System.out.println(EXCEEDING_BOUNDARIES);
 				}
 			} else if (parts[1].equals(TO_DECREASE_RES)) {
-				if (resolution/2 >= minCharsInRow){
+				if (resolution/2 >= Math.max(1, this.image.getWidth() / this.image.getHeight())){
 					resolution /= 2;
-					updateAsciiAlgorithm();
+					updateAlgorithm();
 
-					maxCharsInRow = resolution;
-					minCharsInRow = max(1, resolution/imgHeight);
-					System.out.println(RESOLUTION_SET_TO_MSG + resolution);
+//					maxCharsInRow = resolution;
+//					minCharsInRow = max(1, resolution/imgHeight);
+					System.out.println(RESOLUTION_SET_TO_MSG + resolution+ ".");
 				}
 				else{
 					throw new ResolutionExceedingBoundariesException(EXCEEDING_BOUNDARIES);

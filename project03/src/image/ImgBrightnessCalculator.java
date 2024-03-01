@@ -31,7 +31,8 @@ public class ImgBrightnessCalculator {
 				double red = img.getPixel(i, j).getRed();
 				double green = img.getPixel(i, j).getGreen();
 				double blue = img.getPixel(i, j).getBlue();
-				double greyPixel = RED_MULT_FACTOR * red + GREEN_MULT_FACTOR * green + BLUE_MULT_FACTOR * blue;
+				double greyPixel = RED_MULT_FACTOR * red + GREEN_MULT_FACTOR * green
+						+ BLUE_MULT_FACTOR * blue;
 				sumOfGreyPixels += greyPixel;
 			}
 		}

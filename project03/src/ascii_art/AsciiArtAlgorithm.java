@@ -47,11 +47,11 @@ public class AsciiArtAlgorithm {
 
 
 		//level 1 - padding the image
-		Image paddedImage = ImgPadder.padImage(image);
+//		Image paddedImage = ImgPadder.padImage(image);
 
 		//level 2 - split the image
-		Image[][] images = ImgSplitter.splitImage(paddedImage, numberOfImgInRow);
-
+		Image[][] images = ImgSplitter.splitImage(image, numberOfImgInRow);
+//		System.out.println(images.length);
 
 
 
@@ -76,6 +76,7 @@ public class AsciiArtAlgorithm {
 							ImgBrightnessCalculator.calculateImgBrightness(images[i][j]);
 					subImagesCache[i][j] = currImgBrightness;
 				}
+				System.out.println(subImagesCache[i][j]);
 				char asciiCharToFill =
 						subImgCharMatcher.getCharByImageBrightness(subImagesCache[i][j]);
 				asciiPixelArray[i][j] = asciiCharToFill;

@@ -35,8 +35,8 @@ public class ImgSplitter {
 				Color[][] newPixelArray = new Color[newSubImageDim][newSubImageDim];
 				for (int k = 0; k < newSubImageDim; k++) {
 					for (int l = 0; l < newSubImageDim; l++) {
-						newPixelArray[k][l] = image.getPixel(i * newSubImageDim + l,
-								j * newSubImageDim + k);
+						newPixelArray[k][l] = image.getPixel(i * newSubImageDim + k,
+								j * newSubImageDim + l);
 					}
 				}
 				subImages[i][j] = (new Image(newPixelArray, newSubImageDim, newSubImageDim));

@@ -1,0 +1,41 @@
+or_meisso1
+317734283
+
+1) My code is divided to 4 main packages. The image package is responsible for handling all the manipulations
+on the image. It is divided to 4 classes that have a certain role regarding to the image. The Image class
+which is responsible for a single image creation, it's dimensions and it's saving, the ImgBrightnessCalculator
+ which is responsible for calculating the brightness of a single image, the ImagePadder, which is responsible
+to pad a single image to thw power of 2, and the ImgSplitter class which is responsible for taking a single
+image and splitting it to smaller images.
+The image_char_matching package is responsible for handling all the cases that connect "char images" to
+"color images".
+it is made of 3 classes:
+The CharBrightnessCalculator is responsible for calculating the brightness  of a single char and normalizing
+ it, the CharConverter is responsible for converting characters to binary "color images", and the
+ SubImgCharConverter how is responsible for matching each sub image to it's most appropriate char based on
+ its brightness. it is also responsible for saving all the calculated brightnesses in a hash map.
+The ascii_art package is responsible for handling the ascii art creation itself. It is made of 3 classes
+(including the KeyboardInput who is not attached to this exercise). The asciiArt algorithm class is
+responsible for running a whole process of creating an ascii image, from padding the image, splitting it,
+calculating the brightnesses based on other classes and  then returning the ascii image.
+ The shell class is responsible for all the user interface - it is responsible for getting the wanted image
+ from the user, getting the wanted chars and the wanted resolution and so on. it then uses the
+ascii art algorithm to output the processed image. It also handles the user's mistakes with exceptions.
+The exceptions package is a package that contains all the exceptions the  shell deals with in the different
+scenarios. (more on this in 3)
+2) In the SubImgCharMatcher I used a hash map because it has the best complexity time for insertion,
+deletion and retrieval in O(1),  with space complexity of O(n), it also very convenient to retrieve char
+ brightness easily.
+ In the Shell class I chose to use a tree set for storing the characters, because it was the most convenient
+ to store that way chars in alphabetical order without duplicates and with good complexity time of O(log n)
+ for insertion, deletion and retrieval and O(n) space complexity.
+3) The AddIncorrectFormatException and RemoveIncorrectFormatException deals with wrong input chars to add 
+or to remove to the algorithm, the OutputIncorrectFormatException and the ResolutionIncorrectFormatException
+are dealing with invalid format of choosing output stream or resolution, the
+ResolutionExceedingBoundariesException deals with the case that the user picks too large or too small
+boundaries, and IncorrectCommandException deals
+with incorrect command that is none of the above. I caught those exceptions in the Shell's run
+method and printed an informative message.
+4) I added a public method void clear() that is responsible for clearing the hash map and resetting
+the min and max brightnesses when we need to remove all chars.
+
