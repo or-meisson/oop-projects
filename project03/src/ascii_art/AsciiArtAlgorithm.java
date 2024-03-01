@@ -17,23 +17,23 @@ import java.util.ArrayList;
  * The AsciiArtAlgorithm class is responsible for converting an image to ascii art.
  */
 public class AsciiArtAlgorithm {
-	private Image image;
-	private char[] charset;
-	private int numberOfImgInRow;
+	private final Image image;
+	private final int numberOfImgInRow;
+	private final SubImgCharMatcher subImgCharMatcher;
 
+	private double[][] subImagesCache = null;
 
 
 	/**
 	 * Constructor for the AsciiArtAlgorithm class.
 	 * @param image The image to convert to ascii.
-	 * @param charset The charset to use for the conversion.
 	 * @param numberOfImgInRow The number of images in a row.
+	 * @param subImgCharMatcher The sub-image character matcher.
 	 */
-	public AsciiArtAlgorithm(Image image, char[] charset, int numberOfImgInRow) {
-
+	public AsciiArtAlgorithm(Image image, int numberOfImgInRow, SubImgCharMatcher subImgCharMatcher) {
 		this.image = image;
-		this.charset = charset;
 		this.numberOfImgInRow = numberOfImgInRow;
+		this.subImgCharMatcher = subImgCharMatcher;
 
 	}
 
@@ -44,27 +44,45 @@ public class AsciiArtAlgorithm {
 	public char[][] run() {
 
 		//pre level
-		SubImgCharMatcher subImgCharMatcher = new SubImgCharMatcher(charset);
+
 
 		//level 1 - padding the image
 		Image paddedImage = ImgPadder.padImage(image);
 
 		//level 2 - split the image
-		ArrayList<Image> images = ImgSplitter.splitImage(paddedImage, numberOfImgInRow);
+		Image[][] images = ImgSplitter.splitImage(paddedImage, numberOfImgInRow);
+
+
+
 
 
 		//level 3 - converting each sub-image to ascii
-		char[][] asciiPixelArray = new char[numberOfImgInRow][numberOfImgInRow];
+		int numOfCols = images[0].length;
+		int numOfRows =  images.length;
+		char[][] asciiPixelArray = new char[numOfRows][numOfCols];
 
 
+		boolean isCacheEmpty = this.subImagesCache == null;
 
-		for (int i = 0; i < images.size(); i++) {
-			double currImgBrightness = ImgBrightnessCalculator.calculateImgBrightness(images.get(i));
-			char asciiCharToFill = subImgCharMatcher.getCharByImageBrightness(currImgBrightness);
-			asciiPixelArray[i/numberOfImgInRow][i%numberOfImgInRow] = asciiCharToFill;
-
+		if (isCacheEmpty) {
+			subImagesCache = new double[numOfRows][numOfCols];
 		}
-		return asciiPixelArray;
+
+
+		for (int i = 0; i < numOfRows; i++) {
+			for(int j = 0; j < numOfCols; j++) {
+				if (isCacheEmpty) {
+					double currImgBrightness =
+							ImgBrightnessCalculator.calculateImgBrightness(images[i][j]);
+					subImagesCache[i][j] = currImgBrightness;
+				}
+				char asciiCharToFill =
+						subImgCharMatcher.getCharByImageBrightness(subImagesCache[i][j]);
+				asciiPixelArray[i][j] = asciiCharToFill;
+			}
+		}
+
+	return asciiPixelArray;
 
 
 	}

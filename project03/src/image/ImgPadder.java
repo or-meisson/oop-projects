@@ -29,11 +29,13 @@ public class ImgPadder {
 		int height = image.getHeight();
 		int newWidth = (int) Math.pow(POWER_TO_REACH, Math.ceil(Math.log(width)/Math.log(POWER_TO_REACH)));
 		int newHeight = (int) Math.pow(POWER_TO_REACH, Math.ceil(Math.log(height)/Math.log(POWER_TO_REACH)));
+		int leftPadding = (newWidth - width) / 2;
+		int topPadding = (newHeight - height) / 2;
 		Color[][] newPixelArray = new Color[newHeight][newWidth];
 		for (int i = 0; i < newHeight; i++) {
 			for (int j = 0; j < newWidth; j++) {
-				if (i<height && j<width){
-					newPixelArray[i][j] = image.getPixel(i, j);
+				if (i>=topPadding && i< topPadding + height && j>=leftPadding && j<leftPadding + width){
+					newPixelArray[i][j] = image.getPixel(i - topPadding, j - leftPadding);
 				} else {
 					newPixelArray[i][j] = WHITE_COLOR;
 				}
