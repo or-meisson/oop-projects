@@ -4,7 +4,7 @@ package ascii_art.exceptions;
  * The OutputIncorrectFormatException class is responsible for the exception to
  * an incorrect format in the output command.
  */
-public class OutputIncorrectFormatException extends RuntimeException{
+public class OutputIncorrectFormatException extends Exception{
 
 	/**
 	 * Constructor for the OutputIncorrectFormatException class.

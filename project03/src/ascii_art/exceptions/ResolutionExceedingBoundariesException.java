@@ -4,7 +4,7 @@ package ascii_art.exceptions;
  * The ResolutionExceedingBoundariesException class is responsible for the exception
  * to an exceeding resolution.
  */
-public class ResolutionExceedingBoundariesException extends RuntimeException{
+public class ResolutionExceedingBoundariesException extends Exception{
 
 	/**
 	 * Constructor for the ResolutionExceedingBoundariesException class.

@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class SubImgCharMatcher {
 
-	private Map<Character, Double> charBrightnessHashMap;
+	private final Map<Character, Double> charBrightnessHashMap;
 
 	private  double minBrightness = Double.MAX_VALUE;
 	private double maxBrightness = Double.MIN_VALUE;
@@ -34,32 +34,24 @@ public class SubImgCharMatcher {
 	public char getCharByImageBrightness(double brightness) {
 		char closestChar =  '\0'; // Initialize with a default value
 		double minDifference = Double.MAX_VALUE; // Initialize with a very large value
-		char minAscii = (char) Integer.MAX_VALUE; // Initialize with a very large value //todo is
-		// this the same
-		for (Map.Entry<Character, Double> entry : charBrightnessHashMap.entrySet()) { //todo
-			// normalize here?
-//			double normalizedGottenBrightness = (brightness - minBrightness) / (maxBrightness - minBrightness);
+		for (Map.Entry<Character, Double> entry : charBrightnessHashMap.entrySet()) {
 			double normalizedBrightness =
 					(entry.getValue() - minBrightness) / (maxBrightness - minBrightness);
 			double currentDifference = Math.abs(normalizedBrightness - brightness);
 			char currentAscii = entry.getKey();
 			// If brightness difference is equal, compare ASCII values
-			System.out.println("currentAscii: " + currentAscii + " normalizesBrightness " + normalizedBrightness + " normalizedGottenBrightness " + brightness   );
 
 			if (currentDifference == minDifference) {
-				if (currentAscii < minAscii) {
-					minAscii = currentAscii;
-					closestChar = entry.getKey();
+				if (currentAscii < closestChar) {
+					closestChar = currentAscii;
 				}
 			} else if (currentDifference < minDifference) {
 				minDifference = currentDifference;
-				minAscii = currentAscii;
-				closestChar = entry.getKey();
+				closestChar = currentAscii;
 			}
 		}
 		return closestChar;
 	}
-//todo chaevk in aquarium computer
 
 	/**
 	 * Calculate the minimum and maximum brightness of the characters.
@@ -70,8 +62,6 @@ public class SubImgCharMatcher {
 			maxBrightness = Double.MIN_VALUE;
 		}
 		for (Map.Entry<Character, Double> entry : charBrightnessHashMap.entrySet()) {
-//			double currentBrightness = CharBrightnessCalculator.calculateCurrentBrightness(c);
-
 			if (entry.getValue() < minBrightness) {
 				minBrightness = entry.getValue();
 			}
@@ -81,18 +71,6 @@ public class SubImgCharMatcher {
 		}
 	}
 
-	/**
-	 * Recalculate the brightnesses of the characters.
-	 */
-	private void recalculateBrightnesses(){
-		HashMap<Character, Double> updatedMap = new HashMap<>();
-		for (char c : charBrightnessHashMap.keySet()) {
-			double brightness = CharBrightnessCalculator.calculateBrightness(c, minBrightness,
-					maxBrightness);
-			updatedMap.put(c, brightness);
-		}
-		charBrightnessHashMap = updatedMap; // Replace the original map with the updated one
-	}
 
 	/**
 	 * Add a character to the matching.
@@ -101,24 +79,13 @@ public class SubImgCharMatcher {
 
 	public void addChar (char c ){
 		double brightness = CharBrightnessCalculator.calculateCurrentBrightness(c);
-//		System.out.println(brightness);
 		if(brightness < minBrightness){
 			minBrightness = brightness;
 					}
 		else if (brightness > maxBrightness){
 			maxBrightness = brightness;
 		}
-			//calculate again the brightnesses
 			charBrightnessHashMap.put(c, brightness);
-//			calculateMinMaxBrightness(); //todo more efficient - replace with if statement
-
-//			recalculateBrightnesses();
-
-//		}
-//		else {
-//			charBrightnessHashMap.put(c, brightness);
-//		}
-		System.out.println(charBrightnessHashMap);
 	}
 
 	/**
@@ -126,11 +93,10 @@ public class SubImgCharMatcher {
 	 * @param c The character to remove.
 	 */
 	public void removeChar (char c){
-		if (charBrightnessHashMap.get(c) == minBrightness || charBrightnessHashMap.get(c) == maxBrightness){
-			//calculate again the brightnesses
+		if (charBrightnessHashMap.get(c) == minBrightness || charBrightnessHashMap.get(c)
+				== maxBrightness){
 			charBrightnessHashMap.remove(c);
 			calculateMinMaxBrightness();
-//			recalculateBrightnesses();
 
 		}
 		else{
@@ -139,7 +105,7 @@ public class SubImgCharMatcher {
 
 
 	/**
-	 * Clear the matching.
+	 * Clear the hashmap.
 	 */
 	public void clear(){
 		charBrightnessHashMap.clear();

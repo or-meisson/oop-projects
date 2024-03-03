@@ -5,23 +5,26 @@ or_meisso1
 on the image. It is divided to 4 classes that have a certain role regarding to the image. The Image class
 which is responsible for a single image creation, it's dimensions and it's saving, the ImgBrightnessCalculator
  which is responsible for calculating the brightness of a single image, the ImagePadder, which is responsible
-to pad a single image to thw power of 2, and the ImgSplitter class which is responsible for taking a single
-image and splitting it to smaller images.
+to pad a single image to the nearest power of 2, and the ImgSplitter class which is responsible for taking a
+single image and splitting it to smaller images.
 The image_char_matching package is responsible for handling all the cases that connect "char images" to
 "color images".
 it is made of 3 classes:
-The CharBrightnessCalculator is responsible for calculating the brightness  of a single char and normalizing
- it, the CharConverter is responsible for converting characters to binary "color images", and the
- SubImgCharConverter how is responsible for matching each sub image to it's most appropriate char based on
- its brightness. it is also responsible for saving all the calculated brightnesses in a hash map.
+The CharBrightnessCalculator is responsible for calculating the brightness of a single char,
+ the CharConverter is responsible for converting characters to binary "color images", and the
+ SubImgCharConverter is responsible for matching each sub image to it's most appropriate char based on
+ its normalized brightness. It is also responsible for saving all the calculated brightnesses in a hash map,
+,for adding and removing chars from the hash map and for clearing the hash map. It is also responsible for
+saving the min and max brightnesses of the chars and updating them when needed without needing to go over
+the whole hash map.
 The ascii_art package is responsible for handling the ascii art creation itself. It is made of 3 classes
 (including the KeyboardInput who is not attached to this exercise). The asciiArt algorithm class is
 responsible for running a whole process of creating an ascii image, from padding the image, splitting it,
-calculating the brightnesses based on other classes and  then returning the ascii image.
+calculating the brightnesses based on other classes and then returning the ascii image.
  The shell class is responsible for all the user interface - it is responsible for getting the wanted image
  from the user, getting the wanted chars and the wanted resolution and so on. it then uses the
 ascii art algorithm to output the processed image. It also handles the user's mistakes with exceptions.
-The exceptions package is a package that contains all the exceptions the  shell deals with in the different
+The exceptions package is a package that contains all the exceptions the shell deals with in the different
 scenarios. (more on this in 3)
 2) In the SubImgCharMatcher I used a hash map because it has the best complexity time for insertion,
 deletion and retrieval in O(1),  with space complexity of O(n), it also very convenient to retrieve char
@@ -33,9 +36,10 @@ deletion and retrieval in O(1),  with space complexity of O(n), it also very con
 or to remove to the algorithm, the OutputIncorrectFormatException and the ResolutionIncorrectFormatException
 are dealing with invalid format of choosing output stream or resolution, the
 ResolutionExceedingBoundariesException deals with the case that the user picks too large or too small
-boundaries, and IncorrectCommandException deals
-with incorrect command that is none of the above. I caught those exceptions in the Shell's run
-method and printed an informative message.
+boundaries, the EmptyCharSetException deals with the case that the user tries to run the algorithm
+without any chars, and th IncorrectCommandException deals with incorrect command that is none of the above. I
+ caught those exceptions in the Shell's run method, printed an informative message and waited for the user to
+    input a correct command.
 4) I added a public method void clear() that is responsible for clearing the hash map and resetting
 the min and max brightnesses when we need to remove all chars.
 

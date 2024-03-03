@@ -13,18 +13,7 @@ public class CharBrightnessCalculator {
 	public CharBrightnessCalculator() {
 	}
 
-	/**
-	 * Calculate the brightness of a character.
-	 * @param c The character to calculate the brightness of.
-	 * @param minBrightness The minimum brightness.
-	 * @param maxBrightness The maximum brightness.
-	 * @return The brightness of the character.
-	 */
-	public static double calculateBrightness(char c, double minBrightness, double maxBrightness) {
-		// Calculate the brightness of the character
-		double currentBrightness = calculateCurrentBrightness(c);
-		return (currentBrightness - minBrightness) / (maxBrightness - minBrightness);
-	}
+
 
 	/**
 	 * Calculate the current brightness of a character.

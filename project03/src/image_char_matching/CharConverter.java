@@ -18,7 +18,6 @@ public class CharConverter {
     private static final int DEFAULT_PIXEL_RESOLUTION = 16;
 
 
-    //todo default constructor?
     /**
      * Convert a character to a boolean array.
      * @param c The character to convert.

@@ -13,17 +13,14 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static java.lang.Math.max;
 
 /**
  * The Shell class is responsible for the user interface of the program.
  */
-//todo check efficiency - static for the hastable?
-//todo check how to calculate again the the min and max if the char set changed
-//todo check hoe to not calculate again the char brightness hash map
 
 public class Shell {
-	private static final String INVALID_IMAGE_FILE = "Did not execute due to problem with image file.";
+	private static final String INVALID_IMAGE_FILE = "Did not execute due to problem with " +
+			"image file.";
 	private static final String DEFAULT_IMAGE = "cat.jpeg";
 	private static final String PROMPT = ">>> ";
 	private static final String EXIT_INPUT = "exit";
@@ -48,7 +45,7 @@ public class Shell {
 			"exceeding boundaries.";
 	private static final String INCORRECT_FORMAT_FOR_RES = "Did not change resolution due to" +
 			" incorrect format.";
-	private static final String TO_ADD_ALL_CHARS = "all";
+	private static final String TO_ADD_OR_REMOVE_ALL_CHARS = "all";
 	private static final String INCORRECT_FORMAT_TO_REMOVE_CHARS_MSG = "Did not remove due to" +
 			" incorrect format.";
 	private static final char RANGE_CHARS_DASH = '-';
@@ -58,13 +55,12 @@ public class Shell {
 			" incorrect format.";
 	private static final String REGEX = "\\s+";
 	private static final String EMPTY_CHARSET_ERROR_MSG = "Did not execute. Charset is empty.";
+	private static final int RESOLUTION_MULT_FACTOR = 2;
 	private final Set<Character> sortedCharset = new TreeSet<>(Arrays.asList
 			('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'));
 
 	private int resolution = 128;
-//	private int imgHeight = 128;
-//	private int maxCharsInRow;
-//	private int minCharsInRow;
+
 	private AsciiOutput output = new ConsoleAsciiOutput();
 	private AsciiArtAlgorithm asciiArtAlgorithm;
 	private SubImgCharMatcher subImgCharMatcher;
@@ -77,12 +73,10 @@ public class Shell {
 	public Shell() {
 		try {
 			image = new Image(DEFAULT_IMAGE);
-			image = ImgPadder.padImage(image);
 		} catch (IOException e) {
 			System.out.println(INVALID_IMAGE_FILE);
 		}
-//		maxCharsInRow = image.getWidth();
-//		minCharsInRow = max(1, image.getWidth()/ image.getHeight());
+
 	}
 
 
@@ -152,18 +146,13 @@ public class Shell {
 	private Image handleImageChange(String[] parts) {
 		try{
 			this.image = new Image(parts[1]);
-			this.image = ImgPadder.padImage(this.image);
-
+//			this.image = ImgPadder.padImage(this.image);
 			updateAlgorithm();
-//			maxCharsInRow = image.getWidth();
-//			minCharsInRow = max(1, image.getWidth()/ image.getHeight());
-
 	}
 		catch (IOException e){
 			System.out.println(INVALID_IMAGE_FILE);
 		}
 		return this.image;
-//		hasImageChagnes = true;
 	}
 
 	/**
@@ -190,12 +179,11 @@ public class Shell {
 	 * @throws OutputIncorrectFormatException If the format of the input is incorrect.
 	 */
 	private void handleOutputs (String[] parts) throws OutputIncorrectFormatException {
-		if (parts.length == 2) {
+		if (parts.length == RESOLUTION_MULT_FACTOR) {
 			if (parts[1].equals(TO_CHANGE_TO_CONSOLE)) {
 				output = new ConsoleAsciiOutput();
 			} else if (parts[1].equals(TO_CHANGE_TO_HTML)) {
 				output = new HtmlAsciiOutput(OUTPUT_FILENAME, OUTPUT_FONT);
-
 			} else {
 				throw new OutputIncorrectFormatException(INCORRECT_FORMAT_FOR_OUTPUT);
 			}
@@ -211,28 +199,23 @@ public class Shell {
 	 */
 	private void handleResolution(String[] parts) throws ResolutionIncorrectFormatException,
 			ResolutionExceedingBoundariesException{
-		if (parts.length == 2) {
+		if (parts.length == RESOLUTION_MULT_FACTOR) {
 			if (parts[1].equals(TO_INCREASE_RES)) {
-//				System.out.println(maxCharsInRow);
-				if (resolution*2 <= image.getWidth()){
-//					System.out.println(image.getWidth());
-					resolution *= 2;
+				if (resolution* RESOLUTION_MULT_FACTOR <= ImgPadder.getDimAfterPadding
+						(image.getWidth())){
+					resolution *= RESOLUTION_MULT_FACTOR;
 					updateAlgorithm();
-//					maxCharsInRow = resolution;
-//					minCharsInRow = max(1, resolution/imgHeight);
 					System.out.println(RESOLUTION_SET_TO_MSG + resolution + ".");
 				}
 				else{
 					throw new ResolutionExceedingBoundariesException(EXCEEDING_BOUNDARIES);
-//					System.out.println(EXCEEDING_BOUNDARIES);
 				}
 			} else if (parts[1].equals(TO_DECREASE_RES)) {
-				if (resolution/2 >= Math.max(1, this.image.getWidth() / this.image.getHeight())){
-					resolution /= 2;
+				if (resolution/ RESOLUTION_MULT_FACTOR >= Math.max(1,
+						ImgPadder.getDimAfterPadding(this.image.getWidth()) /
+								ImgPadder.getDimAfterPadding(this.image.getHeight()))){
+					resolution /= RESOLUTION_MULT_FACTOR;
 					updateAlgorithm();
-
-//					maxCharsInRow = resolution;
-//					minCharsInRow = max(1, resolution/imgHeight);
 					System.out.println(RESOLUTION_SET_TO_MSG + resolution+ ".");
 				}
 				else{
@@ -253,27 +236,28 @@ public class Shell {
 	 * @throws RemoveIncorrectFormatException If the format of the input is incorrect.
 	 */
 	private void handleRemoves(String[] parts) throws RemoveIncorrectFormatException {
-		if (parts.length == 2) {
+		if (parts.length == RESOLUTION_MULT_FACTOR) {
 			if (parts[1].length() == 1) {
 				char charToRemove = parts[1].charAt(0);
+				if (checkIfNotContainsChar(charToRemove)) return;
 				sortedCharset.remove(charToRemove);
 				subImgCharMatcher.removeChar(charToRemove);
-
-			} else if (parts[1].equals(TO_ADD_ALL_CHARS)) {
+			} else if (parts[1].equals(TO_ADD_OR_REMOVE_ALL_CHARS)) {
 				sortedCharset.clear();
 				subImgCharMatcher.clear();
-			} else if (parts[1].length() == 3 && parts[1].charAt(1) == RANGE_CHARS_DASH) { //todo what happens
-				// if a part of the charset is already in the set
+			} else if (parts[1].length() == 3 && parts[1].charAt(1) == RANGE_CHARS_DASH) {
 				char start = parts[1].charAt(0);
-				char end = parts[1].charAt(2);
+				char end = parts[1].charAt(RESOLUTION_MULT_FACTOR);
 				if(start <= end){
 					for (char c = start; c <= end; c++) {
+						if (checkIfNotContainsChar(c)) return;
 						sortedCharset.remove(c);
 						subImgCharMatcher.removeChar(c);
 					}
 				}
 				else{
 					for (char c = end; c <= start; c++) {
+						if (checkIfNotContainsChar(c)) return;
 						sortedCharset.remove(c);
 						subImgCharMatcher.removeChar(c);
 					}
@@ -288,26 +272,34 @@ public class Shell {
 	}
 
 	/**
+	 * Check if the charset contains a character.
+	 * @param charToCheck The character to remove.
+	 * @return True if the charset contains the character, false otherwise.
+	 */
+	private boolean checkIfNotContainsChar(char charToCheck) {
+		return !sortedCharset.contains(charToCheck);
+	}
+
+	/**
 	 * Handle the addition of characters to the charset.
 	 * @param parts The parts of the input.
 	 * @throws AddIncorrectFormatException If the format of the input is incorrect.
 	 */
 	private void handleAdds(String[] parts) throws AddIncorrectFormatException {
-		if (parts.length == 2 ) {
+		if (parts.length == RESOLUTION_MULT_FACTOR) {
 			if (parts[1].length() == 1) {
 				char newChar = parts[1].charAt(0);
 				sortedCharset.add(newChar);
 				subImgCharMatcher.addChar(newChar);
-			} else if (parts[1].equals(TO_ADD_ALL_CHARS)) {
+			} else if (parts[1].equals(TO_ADD_OR_REMOVE_ALL_CHARS)) {
 				sortedCharset.clear();
 				for (char c = ASCII_START; c <= ASCII_END; ++c) {
 					sortedCharset.add(c);
 					subImgCharMatcher.addChar(c);
 				}
-			} else if (parts[1].length() == 3 && parts[1].charAt(1) == RANGE_CHARS_DASH) { //todo what happens
-				// if a part of the charset is already in the set
+			} else if (parts[1].length() == 3 && parts[1].charAt(1) == RANGE_CHARS_DASH) {
 				char start = parts[1].charAt(0);
-				char end = parts[1].charAt(2);
+				char end = parts[1].charAt(RESOLUTION_MULT_FACTOR);
 				if(start <= end){
 				for (char c = start; c <= end; c++) {
 					sortedCharset.add(c);
@@ -336,6 +328,7 @@ public class Shell {
 		for (char c : sortedCharset) {
 			System.out.print(c + " ");
 		}
+		System.out.println();
 	}
 
 

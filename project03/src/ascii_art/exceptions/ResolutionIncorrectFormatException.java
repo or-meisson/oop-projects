@@ -4,7 +4,7 @@ package ascii_art.exceptions;
  * The ResolutionIncorrectFormatException class is responsible for the exception to an incorrect
  * format in the resolution command.
  */
-public class ResolutionIncorrectFormatException extends RuntimeException{
+public class ResolutionIncorrectFormatException extends Exception{
 
 	/**
 	 * Constructor for the ResolutionIncorrectFormatException class.

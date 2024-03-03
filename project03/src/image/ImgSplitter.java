@@ -26,8 +26,6 @@ public class ImgSplitter {
 		int numOfCols = numberOfImgInRow;
 		int numOfRows =  image.getHeight() / newSubImageDim;
 
-
-//		ArrayList<Image> images = new ArrayList<>();
 		Image[][] subImages = new Image[numOfRows][numOfCols];
 
 		for (int i = 0; i < numOfRows; i++) {
