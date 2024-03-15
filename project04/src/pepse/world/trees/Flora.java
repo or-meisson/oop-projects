@@ -1,40 +1,49 @@
-package pepse.world;
+package pepse.world.trees;
 
 import danogl.GameObject;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.world.Block;
 import pepse.world.trees.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.Random;
 
 
-
+/**
+ * The flora is a collection of trees.
+ */
 public class Flora {
 
 
 	private final UnaryOperator<Float> groundHeightAt;
-	private final float groundHeightAtX0;
 	private final BiConsumer<GameObject, GameObject> onCollisionOfFruit;
-	public static final double TREE_PLANT_PROBABILITY = 0.2;
+	private static final double TREE_PLANT_PROBABILITY = 0.2;
 
-
-	public Flora(UnaryOperator<Float> groundHeightAt, float groundHeightAtX0,
+	/**
+	 * Creates a flora with the given ground height function and the given action
+	 * to perform when the fruit collides with another game object.
+	 * @param groundHeightAt the ground height function
+	 * @param onCollisionOfFruit the action to perform when the fruit collides
+	 *                             with another game object
+	 */
+	public Flora(UnaryOperator<Float> groundHeightAt,
 				 BiConsumer<GameObject,GameObject> onCollisionOfFruit) {
 
-
 		this.groundHeightAt = groundHeightAt;
-		this.groundHeightAtX0 = groundHeightAtX0;
-
 		this.onCollisionOfFruit = onCollisionOfFruit;
 	}
 
-
+	/**
+	 * Creates a list of trees that are in the range of the given x coordinates.
+	 * @param minX the minimum x coordinate
+	 * @param maxX the maximum x coordinate
+	 * @return a list of trees that are in the range of the given x coordinates
+	 */
 	public List<Tree> createInRange(int minX, int maxX) {
 		List<Tree> trees = new ArrayList<>();
 		int blockSize = Block.SIZE;
@@ -54,6 +63,7 @@ public class Flora {
 				tree.setTrunkTopLeftCorner(Vector2.of(x,groundHeight - trunkHeight));
 				tree.setLeavesCenter();
 				tree.setFruitCenter();
+
 				trees.add(tree);
 			}
 
@@ -63,5 +73,4 @@ public class Flora {
 
 	}
 
-//	public void checkIfAvatarAteFruit()
 }

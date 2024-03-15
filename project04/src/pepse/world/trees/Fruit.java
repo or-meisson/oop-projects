@@ -10,14 +10,25 @@ import danogl.util.Vector2;
 
 import java.util.function.BiConsumer;
 
+/**
+ * The fruit is a red oval that is centered on the leaves and has a radius of 30.
+ */
 public class Fruit extends GameObject {
 
-	public  final Vector2 FRUIT_SIZE = new Vector2(30, 30);
+	private final Vector2 FRUIT_SIZE = new Vector2(30, 30);
 	private final BiConsumer<GameObject, GameObject> onCollisionOfFruit;
 
 
-	public Fruit(Vector2 topLeftCorner, Renderable renderable, BiConsumer<GameObject, GameObject> onCollisionOfFruit) {
-		super(topLeftCorner, new Vector2(30, 30), renderable);
+	/**
+	 * Creates a fruit game object that is centered on the leaves and has a radius of 30.
+	 * @param topLeftCorner the top left corner of the fruit
+	 * @param renderable the renderable of the fruit
+	 * @param onCollisionOfFruit the action to perform when the fruit collides with another game object
+	 */
+	public Fruit(Vector2 topLeftCorner, Renderable renderable,
+				 BiConsumer<GameObject, GameObject> onCollisionOfFruit) {
+		super(topLeftCorner, Vector2.ONES, renderable);
+		this.setDimensions(FRUIT_SIZE);
 		this.onCollisionOfFruit = onCollisionOfFruit;
 		this.setDimensions(FRUIT_SIZE);
 
@@ -27,26 +38,21 @@ public class Fruit extends GameObject {
 
 	}
 
+	/**
+	 * Performs the action to perform when the fruit collides with another game object.
+	 * @param other the other game object
+	 * @param collision the collision
+	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		super.onCollisionEnter(other, collision);
-//		TODO remove the fruit from the tree and add energy to the avatar
 		this.onCollisionOfFruit.accept(this, other);
 
 
-
-
-
-//		new Transition<Component>(this,
-//				this::removeComponent,
-//				this,
-//				this,
-//				Transition.CUBIC_INTERPOLATOR_COMPONENT,
-//				30,
-//				Transition.TransitionType.TRANSITION_ONCE,
-//				null);
-
-
 	}
+
+
+
+
 
 }
